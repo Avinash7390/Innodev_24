@@ -4,13 +4,17 @@ import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
-  const hashedPassword = bcryptjs.hashSync(password, 10);
-  const newUser = new User({ username, email, password: hashedPassword });
   try {
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      return next(errorHandler(400, "Username or email already exists"));
+    }
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+    const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
     res.status(201).json({ message: "User created Successfully" });
   } catch (error) {
-    next(error); //res.status(500).json(error.message);
+    next(error);
   }
 };
 
@@ -20,10 +24,9 @@ export const signin = async (req, res, next) => {
     const validUser = await User.findOne({
       email,
     });
-    if (!validUser) return next(errorHandler(404, "User not found"));
-    const validPassword = bcryptjs.compareSync(password, validUser.password);
-    if (!validPassword)
-      return next(errorHandler(401, "Invalid Username or password"));
+    if (!validUser || !validPassword) {
+      return next(errorHandler(401, "Invalid email or password"));
+    }
 
     const token = jwt.sign(
       { id: validUser._id, isAdmin: validUser.isAdmin },

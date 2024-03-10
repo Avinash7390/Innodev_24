@@ -1,8 +1,34 @@
-import React from 'react'
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
+import Events from './pages/Events'
+import Header from "./components/Header";
+import FooterComp from "./components/Footer";
+import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import PrivateRoute from "./components/PrivateRoute";
 const App = () => {
   return (
-    <div>App</div>
+    <>
+    <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+
+          <Route path="/AllEvents" element={<Events />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+         
+        </Routes>
+        <FooterComp />
+      </BrowserRouter>
+      </>
   )
 }
 
