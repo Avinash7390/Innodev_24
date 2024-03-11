@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 import { Avatar } from "flowbite-react";
 import { toggleTheme } from "../redux/theme/themeSlice";
 
-import { signOut } from "../redux/user/userSlice";
+import { signoutSuccess } from "../redux/user/userSlice";
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
   const path = useLocation().pathname;
@@ -16,8 +16,8 @@ const Header = () => {
   const { theme } = useSelector((state) => state.theme);
   const handleSignout = async () => {
     try {
-      await fetch("api/auth/sign-out");
-      dispatch(signOut());
+      await fetch("api/auth/signout");
+      dispatch(signoutSuccess());
     } catch (error) {
       console.log(error);
     }
