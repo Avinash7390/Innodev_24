@@ -21,9 +21,8 @@ export const signup = async (req, res, next) => {
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
   try {
-    const validUser = await User.findOne({
-      email,
-    });
+    const validUser = await User.findOne({ email });
+    const validPassword = validUser ? bcryptjs.compareSync(password, validUser.password) : false;
     if (!validUser || !validPassword) {
       return next(errorHandler(401, "Invalid email or password"));
     }
