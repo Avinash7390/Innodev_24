@@ -9,6 +9,9 @@ import About from "./pages/About";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import PrivateRoute from "./components/PrivateRoute";
+import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
+import CreateEvent from "./pages/CreateEvent";
+
 const App = () => {
   return (
     <>
@@ -23,6 +26,9 @@ const App = () => {
           <Route path="/AllEvents" element={<Events />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+          <Route element={<OnlyAdminPrivateRoute />}>
+            <Route path="/create-event" element={<CreateEvent />} />
           </Route>
          
         </Routes>
