@@ -122,7 +122,7 @@ if(!formData.email || !formData.password)
           </div>
 {errorMessage && (
   <Alert color="failure" className="mt-5">
-    Something Went Wrong ! Please try again
+   {errorMessage}
   </Alert>
 )}
 
