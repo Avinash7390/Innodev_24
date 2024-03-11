@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import OAuth from "../components/OAuth";
 import { Alert, Button, Label , Spinner , TextInput } from "flowbite-react";
 
-
+import { useEffect } from 'react';
 export default function SignIn() {
   const [formData, setFormData] = useState({});
   const { loading, error:errorMessage } = useSelector((state) => state.user);
@@ -20,12 +20,16 @@ export default function SignIn() {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
+  useEffect(() => {
+    dispatch(signInFailure(null));
+  }, [dispatch]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
 if(!formData.email || !formData.password)
 {
-  return dispatch(signInFailure('Please fill out all the fields'));
+  return dispatch(signInFailure('Please fill all the fields'));
 }
 
     try {
@@ -58,12 +62,12 @@ if(!formData.email || !formData.password)
         <div className="flex-1">
           <Link to="/" className="bold dark:text-white text-4xl">
             <span className="px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
-              Event Management
+              Aman's
             </span>
-            
+            Blog
           </Link>
           <p className="text-sm mt-5">
-            Welcome To The Event Management App. You can sign in with your email and password
+            This is a demo project. You can sign in with your email and password
             or with Google
           </p>
         </div>
@@ -118,7 +122,7 @@ if(!formData.email || !formData.password)
           </div>
 {errorMessage && (
   <Alert color="failure" className="mt-5">
-    {errorMessage}
+    Something Went Wrong ! Please try again
   </Alert>
 )}
 
