@@ -8,8 +8,9 @@ import {app} from '../firebase';
 import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Alert } from "flowbite-react";
+import ReactSelect from 'react-select';
+import { Form, useNavigate } from 'react-router-dom';
 
-import { useNavigate } from 'react-router-dom';
 
 const CreateEvent = () => {
 
@@ -19,6 +20,21 @@ const [imageUploadError,setImageUploadError]=useState(null);
 const [formData,setFormData]=useState({});
 const [publishError,setPublishError]=useState(null);
 const navigate = useNavigate();
+const [selectedTickets, setSelectedTickets] = useState([]);
+const [locationError, setLocationError] = useState('');
+const options = [
+  { value: 'A', label: 'VIP Room' },
+  { value: 'B', label: 'Front Row Left Wing' },
+  { value: 'C', label: 'Front Row Right Wing' },
+  { value: 'D', label: 'Middle Row Left Wing' },
+  { value: 'E', label: 'Middle Row Right Wing' },
+  { value: 'F', label: 'Back Row Left Wing' },
+  { value: 'G', label: 'Back Row Right Wing' },
+  { value: 'H', label: 'Upstands' },
+  { value: 'I', label: 'Downstands' },
+
+];
+
 const handleUploadImage=async ()=>{
   try{
     if(!file){
@@ -60,17 +76,44 @@ console.log(error);
     
 };
 
+
+
+
+const handleSelectChange = (selectedOptions) => {
+  setSelectedTickets(selectedOptions.map(option => option.value));
+};
+
+
 const handleSubmit=async(e)=>{
   e.preventDefault();
+
+  const dateError = validateDate(formData.date);
+  if (dateError) {
+    setPublishError(dateError);
+    return;
+  }
+ 
+  const locationError = validateLocation(formData.location);
+
+  // If there's an error, set the error state and stop the form submission
+  if (locationError) {
+    setPublishError(locationError);
+    return;
+  }
+  if (!formData.content || formData.content.trim() === '<p><br></p>') {
+    setPublishError('Content is required.');
+    return;
+  }
+
   try{
-    const res=await fetch('/api/post/create',{
+    const res=await fetch('/api/event/create-event',{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
       },
       body: JSON.stringify(formData),
     });
-    
+  
     const data=await res.json();
     console.log(data);
    if(!res.ok){
@@ -82,7 +125,7 @@ const handleSubmit=async(e)=>{
 
     if(res.ok){
       setPublishError(null);
-      navigate(`/post/${data.slug}`);
+      navigate(`/events/${data.slug}`);
     }
 
 
@@ -91,7 +134,35 @@ const handleSubmit=async(e)=>{
     setPublishError('Something went wrong');
   }
 }
+const validateLocation = (location) => {
+  const regex = /[!@#$%^&*(),.?":{}|<>\]0-9]/g;
+ 
+   
+
+  if (regex.test(location)) {
+    
+    return "Invalid Location. Please remove any special characters";
+  } else {
+    return null;
+  }
+};
+const validateDate = (date) => {
   
+
+  // Check if date is not in the future
+  const selectedDate = new Date(date);
+  
+  if (!date) {
+    return "Select the Date first ";
+  }
+  const currentDate = new Date();
+  if (selectedDate < currentDate) {
+    return "Only Future Events are allowed to be created.";
+  }
+
+  // If all checks pass, return null
+  return null;
+};
 
 
   return (
@@ -101,22 +172,38 @@ const handleSubmit=async(e)=>{
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
           <TextInput
             type="text"
-            placeholder="Title"
+            placeholder="Event Name"
             required
             id="title"
             className="flex-1"
             onChange={(e)=>setFormData({...formData,title: e.target.value})}
           />
-          <Select
-          onChange={(e)=>setFormData({...formData,category:e.target.value})}>
-            <option value="uncategorized">Select a category</option>
-            <option value="javascript">Javascript</option>
-            <option value="reactjs">React.js</option>
-            <option value="nextjs">Next.js</option>
-            <option value="nodejs">Node.js</option>
-            <option value="tailwind">Tailwind</option>
-          </Select>
+          <TextInput
+  type="date"
+  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+/>
         </div>
+        <input
+        placeholder="Time of the Event "
+  type="time"
+  onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+  required
+/>
+<input
+          type="text"
+          name="location"
+          placeholder="Location of the Event goes here ..."
+          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+          required
+        />
+        {locationError && <p className="text-xl text-red-400">{locationError}</p>}
+
+        <ReactSelect
+        placeholder="Select Tickets for this event" 
+  isMulti
+  options={options}
+  onChange={handleSelectChange}
+/>
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
           <FileInput type="file" accept="image/*" onChange={(e)=>setFile(e.target.files[0])} />
           <Button
@@ -149,17 +236,19 @@ const handleSubmit=async(e)=>{
           alt='upload'
           className="w-full h-84 object-cover"></img>
          )}
+        
         <ReactQuill
           theme="snow"
-          placeholder="Write something .."
+          placeholder="Describe the event here..."
           className="h-72 mb-12"
           required
           onChange={(value)=>{
             setFormData({...formData,content:value});
           }}
         />
+       
         <Button type="submit" gradientDuoTone="purpleToPink" outline>
-          Publish
+          Create
         </Button>
         {
           publishError && <Alert color='failure' className="mt-5">{publishError}</Alert>
