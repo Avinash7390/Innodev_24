@@ -38,7 +38,7 @@ export const signin = async (req, res, next) => {
     res
       .cookie("access_token", token, { httpOnly: true, expires: expiryDate })
       .status(200)
-      .json(rest);
+      .json(rest);  //storing everything except password in the response , we don't wanna give even the hashed password to the client side
   } catch (error) {
     next(error);
   }
@@ -64,7 +64,7 @@ export const google = async (req, res, next) => {
     } else {
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
-        Math.random().toString(36).slice(-8);
+        Math.random().toString(36).slice(-8); //in this case we need to generated password and username for the user !
       const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
       const newUser = new User({
         username:

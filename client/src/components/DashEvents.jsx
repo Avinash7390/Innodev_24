@@ -139,7 +139,7 @@ else{
     )
   }
 </>
-      ):(<p>You have no posts yet !</p>)}
+      ):(<p>You have no Events yet !</p>)}
       <Modal
         show={showModal}
         onClose={() => setShowModal(false)}
