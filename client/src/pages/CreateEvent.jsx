@@ -9,8 +9,8 @@ import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Alert } from "flowbite-react";
 import ReactSelect from 'react-select';
-import { useNavigate } from 'react-router-dom';
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import { Form, useNavigate } from 'react-router-dom';
+
 
 const CreateEvent = () => {
 
@@ -21,6 +21,7 @@ const [formData,setFormData]=useState({});
 const [publishError,setPublishError]=useState(null);
 const navigate = useNavigate();
 const [selectedTickets, setSelectedTickets] = useState([]);
+const [locationError, setLocationError] = useState('');
 const options = [
   { value: 'A', label: 'VIP Room' },
   { value: 'B', label: 'Front Row Left Wing' },
@@ -75,23 +76,7 @@ console.log(error);
     
 };
 
-const validateDate = (date) => {
-  // Check if date is in the correct format
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!date || !dateRegex.test(date)) {
-    return "Invalid date format. Please use YYYY-MM-DD.";
-  }
 
-  // Check if date is not in the future
-  const selectedDate = new Date(date);
-  const currentDate = new Date();
-  if (selectedDate < currentDate) {
-    return "Only Future Events are allowed to be created.";
-  }
-
-  // If all checks pass, return null
-  return null;
-};
 
 
 const handleSelectChange = (selectedOptions) => {
@@ -107,10 +92,21 @@ const handleSubmit=async(e)=>{
     setPublishError(dateError);
     return;
   }
+ 
+  const locationError = validateLocation(formData.location);
 
+  // If there's an error, set the error state and stop the form submission
+  if (locationError) {
+    setPublishError(locationError);
+    return;
+  }
+  if (!formData.content || formData.content.trim() === '<p><br></p>') {
+    setPublishError('Content is required.');
+    return;
+  }
 
   try{
-    const res=await fetch('/api/event/create',{
+    const res=await fetch('/api/event/create-event',{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
@@ -129,7 +125,7 @@ const handleSubmit=async(e)=>{
 
     if(res.ok){
       setPublishError(null);
-      navigate(`/post/${data.slug}`);
+      navigate(`/events/${data.slug}`);
     }
 
 
@@ -138,7 +134,35 @@ const handleSubmit=async(e)=>{
     setPublishError('Something went wrong');
   }
 }
+const validateLocation = (location) => {
+  const regex = /[!@#$%^&*(),.?":{}|<>\]0-9]/g;
+ 
+   
+
+  if (regex.test(location)) {
+    
+    return "Invalid Location. Please remove any special characters";
+  } else {
+    return null;
+  }
+};
+const validateDate = (date) => {
   
+
+  // Check if date is not in the future
+  const selectedDate = new Date(date);
+  
+  if (!date) {
+    return "Select the Date first ";
+  }
+  const currentDate = new Date();
+  if (selectedDate < currentDate) {
+    return "Only Future Events are allowed to be created.";
+  }
+
+  // If all checks pass, return null
+  return null;
+};
 
 
   return (
@@ -160,13 +184,22 @@ const handleSubmit=async(e)=>{
 />
         </div>
         <input
+        placeholder="Time of the Event "
   type="time"
   onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+  required
 />
-<GooglePlacesAutocomplete
-  onSelect={(selectedPlace) => setFormData({ ...formData, location: selectedPlace.label })}
-/>
+<input
+          type="text"
+          name="location"
+          placeholder="Location of the Event goes here ..."
+          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+          required
+        />
+        {locationError && <p className="text-xl text-red-400">{locationError}</p>}
+
         <ReactSelect
+        placeholder="Select Tickets for this event" 
   isMulti
   options={options}
   onChange={handleSelectChange}

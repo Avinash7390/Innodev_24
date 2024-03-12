@@ -5,12 +5,15 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {HiOutlineExclamationCircle} from 'react-icons/hi';
 
-const DashPosts = () => {
+const DashEvents = () => {
   const {currentUser}=useSelector((state)=>state.user)
 const [userPosts,setUserPosts]=useState([]);
 const[showMore,setShowMore]=useState(true);
 const[showModal,setShowModal]=useState(false);
 const [postIdToDelete,setPostIdToDelete]=useState('');
+
+
+
 
 useEffect(()=>{
 const fetchPosts=async()=>{
@@ -168,4 +171,4 @@ else{
   )
 }
 
-export default DashPosts
+export default DashEvents
