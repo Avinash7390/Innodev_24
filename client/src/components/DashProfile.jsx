@@ -178,7 +178,7 @@ const DashProfile = () => {
               gradientDuoTone="purpleToPink"
               className="w-full"
             >
-              Create a post
+              Create an Event
             </Button>
           </Link>
         )}
