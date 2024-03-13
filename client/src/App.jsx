@@ -11,6 +11,7 @@ import SignUp from "./pages/SignUp";
 import PrivateRoute from "./components/PrivateRoute";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import CreateEvent from "./pages/CreateEvent";
+import GlobalChat from "./pages/GlobalChat";
 
 const App = () => {
   return (
@@ -30,6 +31,8 @@ const App = () => {
           <Route element={<OnlyAdminPrivateRoute />}>
             <Route path="/create-event" element={<CreateEvent />} />
           </Route>
+
+          <Route path="/global" element={<GlobalChat/>}/>
          
         </Routes>
         <FooterComp />

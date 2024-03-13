@@ -5,6 +5,10 @@ import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
 import path from "path";
+import { createServer } from "http";
+import { Server } from "socket.io";
+
+
 
 dotenv.config();
 
@@ -45,3 +49,18 @@ app.use((err, req, res, next) => {
     statusCode,
   });
 });
+
+const httpServer = createServer();
+const io = new Server(httpServer,{
+  cors: {
+    origin: "http://localhost:8000",
+    methods: ["GET","POST"],
+  },
+})
+
+io.on("connection",async(socket)=>{
+  //
+})
+
+console.log("listening to port...");
+httpServer.listen(process.env.PORT || 4000);
