@@ -10,7 +10,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { Alert } from "flowbite-react";
 import ReactSelect from 'react-select';
 import { Form, useNavigate } from 'react-router-dom';
-
+import { htmlToText } from 'html-to-text';
 
 const CreateEvent = () => {
 
@@ -20,7 +20,7 @@ const [imageUploadError,setImageUploadError]=useState(null);
 const [formData,setFormData]=useState({});
 const [publishError,setPublishError]=useState(null);
 const navigate = useNavigate();
-const [selectedTickets, setSelectedTickets] = useState([]);
+
 const [locationError, setLocationError] = useState('');
 const options = [
   { value: 'A', label: 'VIP Room' },
@@ -77,16 +77,23 @@ console.log(error);
 };
 
 
+const handleQuillChange = (contentHtml) => {
+  const contentText = htmlToText(contentHtml);
+  setFormData({ ...formData, content: contentText });
+};
+
 
 
 const handleSelectChange = (selectedOptions) => {
-  setSelectedTickets(selectedOptions.map(option => option.value));
+  setFormData({ ...formData, tickets: selectedOptions });
+
 };
+
 
 
 const handleSubmit=async(e)=>{
   e.preventDefault();
-
+console.log(formData);
   const dateError = validateDate(formData.date);
   if (dateError) {
     setPublishError(dateError);
@@ -100,13 +107,13 @@ const handleSubmit=async(e)=>{
     setPublishError(locationError);
     return;
   }
-  if (!formData.content || formData.content.trim() === '<p><br></p>') {
+  if (!formData.content==="") {
     setPublishError('Content is required.');
     return;
   }
 
   try{
-    const res=await fetch('/api/event/create-event',{
+    const res=await fetch('/api/event/create',{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
@@ -115,7 +122,7 @@ const handleSubmit=async(e)=>{
     });
   
     const data=await res.json();
-    console.log(data);
+    
    if(!res.ok){
     setPublishError(data.message);
     console.log(data.message);
@@ -129,7 +136,8 @@ const handleSubmit=async(e)=>{
     }
 
 
-  }catch(error)
+  }
+   catch(error)
   {
     setPublishError('Something went wrong');
   }
@@ -164,6 +172,10 @@ const validateDate = (date) => {
   return null;
 };
 
+function convertTo12Hour(time) {
+  const [hours, minutes] = time.split(':');
+  return ((hours % 12) || 12) + ':' + minutes + (hours < 12 ? ' AM' : ' PM');
+}
 
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
@@ -184,9 +196,9 @@ const validateDate = (date) => {
 />
         </div>
         <input
-        placeholder="Time of the Event "
+  placeholder="Time of the Event "
   type="time"
-  onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+  onChange={(e) => setFormData({ ...formData, time: convertTo12Hour(e.target.value) })}
   required
 />
 <input
@@ -242,9 +254,7 @@ const validateDate = (date) => {
           placeholder="Describe the event here..."
           className="h-72 mb-12"
           required
-          onChange={(value)=>{
-            setFormData({...formData,content:value});
-          }}
+          onChange={handleQuillChange}
         />
        
         <Button type="submit" gradientDuoTone="purpleToPink" outline>
