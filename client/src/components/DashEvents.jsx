@@ -4,6 +4,15 @@ import { useEffect,useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {HiOutlineExclamationCircle} from 'react-icons/hi';
+import { ImLocation } from "react-icons/im";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { MdOutlineAccessTimeFilled } from "react-icons/md";
+import { TiCamera } from "react-icons/ti";
+import { FaTicketAlt } from "react-icons/fa";
+import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
+
 
 const DashEvents = () => {
   const {currentUser}=useSelector((state)=>state.user)
@@ -90,10 +99,15 @@ else{
 <>
 <Table hoverable className='shadow-md'> 
 <Table.Head>
-  <Table.HeadCell>Date </Table.HeadCell>
-  <Table.HeadCell>Event Image</Table.HeadCell>
-  <Table.HeadCell>Event Name</Table.HeadCell>
-  <Table.HeadCell>Event Location</Table.HeadCell>
+  
+  <Table.HeadCell className='flex justify-center'><FaRegCalendarAlt size={25} /></Table.HeadCell>
+  <Table.HeadCell className='item-center'><MdOutlineAccessTimeFilled size={25} /></Table.HeadCell>
+  
+  <Table.HeadCell>Ticket Types</Table.HeadCell>
+  <Table.HeadCell className='flex justify-center'><TiCamera size={25}/></Table.HeadCell>
+  <Table.HeadCell className='font-bold tracking-widest'>Event Name</Table.HeadCell>
+  <Table.HeadCell ><ImLocation size={25}/></Table.HeadCell>
+  
   <Table.HeadCell>
     <span>Delete </span></Table.HeadCell>
   <Table.HeadCell>
@@ -103,7 +117,13 @@ else{
     <Table.Body className='divide-y'>
       <Table.Row  className='bg-white dark:border-gray-700 dark:bg-gray-800'>
         <Table.Cell>
-          {new Date(event.updatedAt).toLocaleDateString()}
+          {new Date(event.date).toISOString().slice(0, 10)}
+        </Table.Cell>
+        <Table.Cell>
+          {event.time}
+        </Table.Cell>
+        <Table.Cell className='flex justify-center'>
+          {event.tickets.length>0?event.tickets.length:'No tickets'}
         </Table.Cell>
         <Table.Cell>
           <Link to={`/event/${event.slug}`}>
@@ -122,14 +142,14 @@ else{
         <span onClick={()=>{
           setShowModal(true);
           setEventIdToDelete(event._id);
-        }} className='font-medium text-red-500 hover:underline cursor-pointer'>
-          Delete
+        }} className='font-medium text-red-500 opacity-70 hover:underline cursor-pointer'>
+        <MdDelete size={25}/>
         </span>
         </Table.Cell>
         <Table.Cell>
-        <Link className="text-teal-500  hover:underline" to={`/update-event/${event._id}`}>
+        <Link className="text-teal-500 opacity-80  hover:underline" to={`/update-event/${event._id}`}>
         <span>
-          Edit
+        <FaEdit size={24}/>
         </span>
         </Link>
         </Table.Cell>
