@@ -28,7 +28,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
           <Route element={<OnlyAdminPrivateRoute />}>
-            <Route path="/create-event" element={<CreateEvent />} />
+            <Route path="/create" element={<CreateEvent />} />
           </Route>
          
         </Routes>
