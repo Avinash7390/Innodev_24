@@ -1,50 +1,36 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.css";
-import {io} from "socket.io-client";
-import React,{useState} from 'react'
+import { io } from "socket.io-client";
+import React, { useState } from 'react'
+import NewChatUser from "../components/NewChatUser";
 
 const GlobalChat = () => {
 
-    const [newUser,setNewUser]=useState("");
-    function handleChange({currentTarget: input}){
+    const [newUser, setNewUser] = useState("");
+    const [user, setUser] = useState("");
+    function handleChange({ currentTarget: input }) {
         setNewUser(input.value);
+    }
+
+    function logNewUser() {
+        setUser(newUser);
     }
 
 
 
-  return (
-    <div>
-      <main className="content">
-        <div className="container mt-3">
-            <div className="card w-100 text-center border-white">
-                <div className="row">
-
-                    <div className="col-12">
-                        <h5> Enter Username</h5>
-                    </div>
-
-                    <div className="col-4">
-                    <div className="d-flex justify-content-center py-1">
-                        <input 
-                        type="text" 
-                        name="username" 
-                        value={newUser}
-                        className="form-control"
-                        placeholder="Username"
-                        autoComplete="off"
-                        onChange={()=>this.handleChange(e)}
-                        />
-                    </div>
-                    </div>
-
-                    
+    return (
+        <div>
+            <main className="content">
+                <div className="container mt-3">
+                    {user && <div>Logged in as  {user}</div>}
+                    {!user &&
+                    <NewChatUser newUser={newUser} handleChange={handleChange} logNewUser={logNewUser} />
+                    }
 
                 </div>
-            </div>
+            </main>
         </div>
-      </main>
-    </div>
-  )
+    )
 }
 
 export default GlobalChat
