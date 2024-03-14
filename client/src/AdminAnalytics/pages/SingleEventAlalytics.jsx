@@ -1,6 +1,7 @@
 import React from "react";
 import StatsContainer from "../components/StatsContainer";
 import ChartsContainerForSingleEvent from "../components/ChartContainerForSingleEvent";
+import SingleEventDesc from "../components/SingleEventDesc";
 import { IoTicketOutline } from "react-icons/io5";
 import { FaMoneyCheckAlt, FaUserCheck } from "react-icons/fa";
 import { GiPlayerNext } from "react-icons/gi";
@@ -12,6 +13,14 @@ const SingleEventAlalytics = () => {
     { CheckedIn: 6, time: "8:00", Remaining: 36 },
     { CheckedIn: 30, time: "10:10", Remaining: 12 },
   ];
+  const eventDesc = {
+    title: "Cricket Mania",
+    Date: "12-03-2024",
+    Time: "2:30PM",
+    Venue: "Atheletics Ground",
+    desc: "It's cricket match organized by SAC MNNIT",
+    ticketPrice: [20, 30, 200, 300],
+  };
   const defaultStats = [
     {
       title: "Total Participants",
@@ -47,16 +56,25 @@ const SingleEventAlalytics = () => {
       <div
         style={{
           marginRight: "50px",
-          marginTop: "50px",
+          marginTop: "20px",
           marginLeft: "50px",
           marginBottom: "50px",
           borderRadius: "10px",
         }}
       >
-        <h2 style={{ color: "#636263", marginLeft: "10px" }}>
+        <h2
+          style={{
+            color: "#636263",
+            marginLeft: "10px",
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            marginBottom: "10px",
+          }}
+        >
           Event Name Stats
         </h2>
         <StatsContainer defaultStats={defaultStats} />
+        <SingleEventDesc data={eventDesc} />
         <ChartsContainerForSingleEvent data={data} />
       </div>
     </>

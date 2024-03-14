@@ -8,8 +8,12 @@ const ChartsContainerForSingleEvent = ({ data }) => {
   const [barChart, setBarChart] = useState(true);
   return (
     <ChartContainerWrapper>
-      <h4>Time Vs Attendance</h4>
-      <button type="button" onClick={() => setBarChart(!barChart)}>
+      <h4 className="title">Time Vs Attendance</h4>
+      <button
+        type="button"
+        className="toggleChartButton"
+        onClick={() => setBarChart(!barChart)}
+      >
         {barChart ? "Area Chart" : "Bar Chart"}
       </button>
       {barChart ? <BarChart data={data} /> : <AreaChart data={data} />}

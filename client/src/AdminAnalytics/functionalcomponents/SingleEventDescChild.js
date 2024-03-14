@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
-const StatsItemWrapper = styled.article`
+const SingleEventDescChildWrapper = styled.article`
   padding: 2rem;
-  background: #f2e7e1;
+  background: #ceeff2;
   border-radius: 10px;
+  margin-top: 20px;
   border-bottom: 5px solid ${(props) => props.color};
   header {
     display: flex;
@@ -22,7 +23,10 @@ const StatsItemWrapper = styled.article`
     letter-spacing: var(--letterSpacing);
     text-align: left;
     margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    color: #494d52;
     font-weight: bold;
+    font-size: 1.5rem;
   }
   .icon {
     width: 70px;
@@ -37,6 +41,38 @@ const StatsItemWrapper = styled.article`
       color: ${(props) => props.color};
     }
   }
+  .time {
+    font-family: verdana;
+    font-weight: bold;
+    color: #098d99;
+  }
+  .date {
+    font-family: verdana;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  .attendees {
+    text-decoration: none;
+    color: #f5f8fa;
+    font-family: roboto;
+    background: #072742;
+    font-size: 25px;
+    border-radius: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .attendees span {
+    margin: 10px 10px 10px 10px;
+  }
+  .Desc {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .venue {
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 `;
 
-export default StatsItemWrapper;
+export default SingleEventDescChildWrapper;
