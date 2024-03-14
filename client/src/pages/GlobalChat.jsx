@@ -1,11 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.css";
 import { io } from "socket.io-client";
-import React, { useState } from 'react'
+import React, { useState , useEffect} from 'react'
 import NewChatUser from "../components/NewChatUser";
 import Chat from "../components/chat";
 
-
+const socket = io("http://localhost:4000")
 
 const GlobalChat = () => {
 
@@ -13,13 +13,21 @@ const GlobalChat = () => {
     const [user, setUser] = useState("");
     const [Message,setMessage] = useState("");
 
+    useEffect(()=>{
+        socket.on("session" , ({userId,username})=>{
+            setUser(username);
+        })
+    },[socket]);
+
 
     function handleChange({ currentTarget: input }) {
         setNewUser(input.value);
     }
 
     function logNewUser() {
-        setUser(newUser);
+        
+        socket.auth = { username : newUser}
+        socket.connect();
     }
 
     function handleChange2({ currentTarget: input }){
