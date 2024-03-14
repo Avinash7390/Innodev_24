@@ -33,7 +33,7 @@ const fetchEvents=async()=>{
     if(res.ok)
     {
       setUserEvents(data.event)
-      if(data.events.length<9){
+      if(data.event.length<9){
         setShowMore(false);
       }
     }
@@ -56,7 +56,7 @@ const handleShowMore=async()=>{
     const data=await res.json();
     if(res.ok){
       setUserEvents((prev)=>[...prev,...data.event]);
-      if( data.events.length < 9){
+      if( data.event.length < 9){
 
         setShowMore(false);
         
@@ -91,7 +91,18 @@ else{
   }
 
 }
+function convertTo12Hour(time) {
+  // If time already contains 'AM' or 'PM', return it as is
+  if (time.includes('AM') || time.includes('PM')) {
+    return time;
+  }
 
+  // Otherwise, convert time to 12-hour format
+  const [hours, minutes] = time.split(':');
+  const hoursIn12HourFormat = (hours % 12) || 12;
+  const period = hours < 12 ? ' AM' : ' PM';
+  return hoursIn12HourFormat + ':' + minutes + period;
+}
 
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
@@ -120,7 +131,9 @@ else{
           {new Date(event.date).toISOString().slice(0, 10)}
         </Table.Cell>
         <Table.Cell>
-          {event.time}
+          {
+          
+          convertTo12Hour(event.time)}
         </Table.Cell>
         <Table.Cell className='flex justify-center items-center mt-3'>
           {event.tickets.length>0?event.tickets.length:'No tickets'}

@@ -97,35 +97,39 @@ export const deleteEvent=async(req,res,next)=>{
     }
 }
 
-export const updateEvent=async(req,res,next)=>{
-    if(!req.user.isAdmin|| req.user.id !== req.params.userId){
-        return next(errorHandler(403,'You are not allowed to update this Event'));
+export const updateEvent = async (req, res, next) => {
+    if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+      return next(errorHandler(403, 'You are not allowed to update this Event'));
     }
-    if(!req.body.title || !req.body.content || !req.body.date || !req.body.location || !req.body.tickets.length)
-   {
-   
-    
-    return next(errorHandler(400,'Please provide all fields'))
-   }
-    const existingEvent = await Event.findOne({ title: req.body.title });
+    if (!req.body.title || !req.body.content || !req.body.date || !req.body.location || !req.body.tickets.length) {
+      return next(errorHandler(400, 'Please provide all fields'))
+    }
+  
+    try {
+      // Check if the title is being updated
+      const event = await Event.findById(req.params.eventId);
+      if (event.title !== req.body.title) {
+        // Check if the new title already exists
+        const existingEvent = await Event.findOne({ title: req.body.title });
         if (existingEvent) {
-            return next(errorHandler(400, 'Event Name already taken'));  
+          return next(errorHandler(400, 'Event name already taken'));
         }
-    try{
-        const updatedEvent=await Event.findByIdAndUpdate(req.params.eventId,{$set:{
-            location:req.body.location,
-            date:req.body.date,
-            time:req.body.time,
-            title:req.body.title,
-            content:req.body.content,
-            slug:req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g,''),
-            
-            tickets:req.body.tickets,
-            image:req.body.image,
-        }},{new:true});
-        res.status(200).json(updatedEvent);
-    }catch(error)
-    {
-        next(error);
+      }
+  
+      const updatedEvent = await Event.findByIdAndUpdate(req.params.eventId, {
+        $set: {
+          location: req.body.location,
+          date: req.body.date,
+          time: req.body.time,
+          title: req.body.title,
+          content: req.body.content,
+          slug: req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, ''),
+          tickets: req.body.tickets,
+          image: req.body.image,
+        }
+      }, { new: true });
+      res.status(200).json(updatedEvent);
+    } catch (error) {
+      next(error);
     }
-}
+  }

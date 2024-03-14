@@ -59,6 +59,7 @@ useEffect(()=>{
       } else if (period === 'AM' && hours === '12') {
         hours = '00';
       }
+      hours = hours.padStart(2, '0');  // Add this line
       const formattedTime = `${hours}:${minutes}`;
   
       if (!res.ok) {
@@ -69,8 +70,9 @@ useEffect(()=>{
   
       if (res.ok) {
         setPublishError(null);
-        setFormData({ ...restOfData, date: formattedDate, time: formattedTime });
-      }
+        setFormData({ ...restOfData, date: formattedDate, time: formattedTime});
+       
+      } 
     };
   
     fetchEvent();
@@ -80,6 +82,7 @@ useEffect(()=>{
 
 
 },[eventId]);
+
 
 
 const handleUploadImage=async ()=>{
@@ -137,7 +140,7 @@ const handleSelectChange = (selectedOptions) => {
 
 const handleSubmit=async(e)=>{
   e.preventDefault();
-console.log(formData);
+
   const dateError = validateDate(formData.date);
   if (dateError) {
     setPublishError(dateError);
@@ -204,8 +207,10 @@ const validateDate = (date) => {
   // Check if date is not in the future
   const selectedDate = new Date(date);
   
+  
   if (!date) {
     return "Select the Date first ";
+   
   }
   const currentDate = new Date();
   if (selectedDate < currentDate) {
@@ -237,7 +242,9 @@ function convertTo12Hour(time) {
           />
           <input
   type="date"
-  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+  onChange={(e) => { setFormData({ ...formData, date: e.target.value });
+
+}}
   value={formData.date}
 />
         </div>
