@@ -107,10 +107,7 @@ export const updateEvent=async(req,res,next)=>{
     
     return next(errorHandler(400,'Please provide all fields'))
    }
-    const existingEvent = await Event.findOne({ title: req.body.title });
-        if (existingEvent) {
-            return next(errorHandler(400, 'Event Name already taken'));  
-        }
+    
     try{
         const updatedEvent=await Event.findByIdAndUpdate(req.params.eventId,{$set:{
             location:req.body.location,
