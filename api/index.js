@@ -10,7 +10,7 @@ import { Server } from "socket.io";
 import {v4 as uuidv4} from "uuid"
 
 
-
+import eventRoutes from './routes/event.route.js';
 dotenv.config();
 
 mongoose
@@ -38,7 +38,7 @@ app.listen(3000, () => {
 
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
-
+app.use('/api/event',eventRoutes);
 
 app.use((err, req, res, next) => {
   //middleware for handling errors

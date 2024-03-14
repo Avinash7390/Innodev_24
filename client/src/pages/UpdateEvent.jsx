@@ -1,5 +1,5 @@
 import { FileInput, TextInput } from "flowbite-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, Button } from "flowbite-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -9,10 +9,11 @@ import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Alert } from "flowbite-react";
 import ReactSelect from 'react-select';
-import { Form, useNavigate } from 'react-router-dom';
-import { htmlToText } from 'html-to-text';
-
-const CreateEvent = () => {
+import {  useNavigate , useParams } from 'react-router-dom';
+import { htmlToText } from 'html-to-text'; 
+import { useSelector } from "react-redux";
+import { set } from "mongoose";
+const UpdateEvent = () => {
 
 const [file,setFile]=useState(null);
 const [imageUploadProgress,setImageUploadProgress]=useState(null);
@@ -20,8 +21,12 @@ const [imageUploadError,setImageUploadError]=useState(null);
 const [formData,setFormData]=useState({});
 const [publishError,setPublishError]=useState(null);
 const navigate = useNavigate();
-
+const {eventId}=useParams();
 const [locationError, setLocationError] = useState('');
+
+const {currentUser}=useSelector((state)=>state.user);
+
+
 const options = [
   { value: 'A', label: 'VIP Room' },
   { value: 'B', label: 'Front Row Left Wing' },
@@ -34,6 +39,48 @@ const options = [
   { value: 'I', label: 'Downstands' },
 
 ];
+useEffect(()=>{
+  try {
+    const fetchEvent = async () => {
+      const res = await fetch(`/api/event/getEvents?eventId=${eventId}`);
+      const data = await res.json();
+  
+      const { date, time, ...restOfData } = data.event[0];
+  
+      // Convert date to YYYY-MM-DD format
+      const dateObj = new Date(date);
+      const formattedDate = dateObj.toISOString().split('T')[0];
+  
+      // Convert time to HH:mm format
+      const [timePart, period] = time.split(' ');
+      let [hours, minutes] = timePart.split(':');
+      if (period === 'PM' && hours !== '12') {
+        hours = (parseInt(hours, 10) + 12).toString();
+      } else if (period === 'AM' && hours === '12') {
+        hours = '00';
+      }
+      const formattedTime = `${hours}:${minutes}`;
+  
+      if (!res.ok) {
+        console.log(data.message);
+        setPublishError(data.message);
+        return;
+      }
+  
+      if (res.ok) {
+        setPublishError(null);
+        setFormData({ ...restOfData, date: formattedDate, time: formattedTime });
+      }
+    };
+  
+    fetchEvent();
+  } catch (error) {
+    console.log(error.message);
+  }
+
+
+},[eventId]);
+
 
 const handleUploadImage=async ()=>{
   try{
@@ -104,11 +151,14 @@ console.log(formData);
     setPublishError(locationError);
     return;
   }
-  
+  if (!formData.content==="") {
+    setPublishError('Content is required.');
+    return;
+  }
 
   try{
-    const res=await fetch('/api/event/create',{
-      method:'POST',
+    const res=await fetch(`/api/event/updateEvent/${formData._id}/${currentUser._id}`,{
+      method:'PUT',
       headers:{
         'Content-Type':'application/json',
       },
@@ -126,7 +176,7 @@ console.log(formData);
 
     if(res.ok){
       setPublishError(null);
-      navigate(`/events/${data.slug}`);
+      navigate(`/event/${data.slug}`);
     }
 
 
@@ -173,7 +223,7 @@ function convertTo12Hour(time) {
 
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold">Create an Event</h1>
+      <h1 className="text-center text-3xl my-7 font-semibold">Update Event</h1>
       <form className="flex flex-col gap-4 " onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
           <TextInput
@@ -183,21 +233,20 @@ function convertTo12Hour(time) {
             id="title"
             className="flex-1"
             onChange={(e)=>setFormData({...formData,title: e.target.value})}
+            value={formData.title}
           />
           <input
   type="date"
-  onChange={(e) =>{ setFormData({ ...formData, date: e.target.value });
-  console.log(e.target.value);
-  console.log(formData);
-  }
-  }
+  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+  value={formData.date}
 />
         </div>
         <input
   placeholder="Time of the Event "
   type="time"
-  onChange={(e) => setFormData({ ...formData, time: convertTo12Hour(e.target.value) })}
+  onChange={(e) => setFormData({ ...formData, time:e.target.value})}
   required
+  value={formData.time}
 />
 <input
           type="text"
@@ -205,6 +254,7 @@ function convertTo12Hour(time) {
           placeholder="Location of the Event goes here ..."
           onChange={(e) => setFormData({ ...formData, location: e.target.value })}
           required
+          value={formData.location}
         />
         {locationError && <p className="text-xl text-red-400">{locationError}</p>}
 
@@ -213,6 +263,7 @@ function convertTo12Hour(time) {
   isMulti
   options={options}
   onChange={handleSelectChange}
+  value={formData.tickets}
 />
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
           <FileInput type="file" accept="image/*" onChange={(e)=>setFile(e.target.files[0])} />
@@ -248,17 +299,18 @@ function convertTo12Hour(time) {
          )}
         
         <ReactQuill
-           theme="snow"
-           placeholder="Write something .."
-           className="h-72 mb-12"
-           required
-           onChange={(value)=>{
-             setFormData({...formData,content:value});
-           }}
+          theme="snow"
+          placeholder="Describe the event here..."
+          className="h-72 mb-12"
+          required
+          onChange={(value) => {
+            setFormData({ ...formData, content: value });
+          }}
+            value={formData.content}
         />
        
         <Button type="submit" gradientDuoTone="purpleToPink" outline>
-          Create
+          Update
         </Button>
         {
           publishError && <Alert color='failure' className="mt-5">{publishError}</Alert>
@@ -267,4 +319,4 @@ function convertTo12Hour(time) {
     </div>
   )
   }
-export default CreateEvent;
+export default UpdateEvent;
