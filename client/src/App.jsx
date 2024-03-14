@@ -11,7 +11,7 @@ import SignUp from "./pages/SignUp";
 import PrivateRoute from "./components/PrivateRoute";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import CreateEvent from "./pages/CreateEvent";
-
+import UpdateEvent from "./pages/UpdateEvent";
 const App = () => {
   return (
     <>
@@ -29,6 +29,7 @@ const App = () => {
           </Route>
           <Route element={<OnlyAdminPrivateRoute />}>
             <Route path="/create" element={<CreateEvent />} />
+            <Route path="/update/:eventId" element={<UpdateEvent />} />
           </Route>
          
         </Routes>

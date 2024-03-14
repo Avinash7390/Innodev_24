@@ -32,7 +32,7 @@ const fetchEvents=async()=>{
     console.log(data);
     if(res.ok)
     {
-      setUserEvents(data.events)
+      setUserEvents(data.event)
       if(data.events.length<9){
         setShowMore(false);
       }
@@ -55,7 +55,7 @@ const handleShowMore=async()=>{
     const res=await fetch(`api/event/getEvents?userid=${currentUser._id}&startIndex=${startIndex}`);
     const data=await res.json();
     if(res.ok){
-      setUserEvents((prev)=>[...prev,...data.events]);
+      setUserEvents((prev)=>[...prev,...data.event]);
       if( data.events.length < 9){
 
         setShowMore(false);
@@ -122,7 +122,7 @@ else{
         <Table.Cell>
           {event.time}
         </Table.Cell>
-        <Table.Cell className='flex justify-center'>
+        <Table.Cell className='flex justify-center items-center mt-3'>
           {event.tickets.length>0?event.tickets.length:'No tickets'}
         </Table.Cell>
         <Table.Cell>
@@ -132,22 +132,22 @@ else{
            className='w-20 h-10 object-cover bg-gray-500'/>
           </Link>
         </Table.Cell>
-        <Table.Cell>
+        <Table.Cell className='flex justify-center'>
           <Link    className='font-medium text-gray-900 dark:text-white'   to={`/event/${event.slug}`}>{event.title}</Link>
         </Table.Cell>
-        <Table.Cell>
+        <Table.Cell className=' text-zinc-400 font-bold'>
         {event.location}
         </Table.Cell>
         <Table.Cell>
         <span onClick={()=>{
           setShowModal(true);
           setEventIdToDelete(event._id);
-        }} className='font-medium text-red-500 opacity-70 hover:underline cursor-pointer'>
-        <MdDelete size={25}/>
+        }} className='font-medium flex justify-center hover:opacity-90 text-red-500 opacity-70 hover:underline cursor-pointer'>
+        <MdDelete  size={25}/>
         </span>
         </Table.Cell>
         <Table.Cell>
-        <Link className="text-teal-500 opacity-80  hover:underline" to={`/update-event/${event._id}`}>
+        <Link className="text-teal-500 opacity-80  flex justify-center hover:opacity-100  hover:underline" to={`/update/${event._id}`}>
         <span>
         <FaEdit size={24}/>
         </span>
