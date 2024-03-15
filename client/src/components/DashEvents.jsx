@@ -12,18 +12,12 @@ import { FaTicketAlt } from "react-icons/fa";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
-
-
 const DashEvents = () => {
   const {currentUser}=useSelector((state)=>state.user)
 const [userEvents,setUserEvents]=useState([]);
 const[showMore,setShowMore]=useState(true);
 const[showModal,setShowModal]=useState(false);
 const [eventIdToDelete,setEventIdToDelete]=useState('');
-
-
-
-
 useEffect(()=>{
 const fetchEvents=async()=>{
   try{
@@ -47,8 +41,6 @@ if(currentUser.isAdmin)
   fetchEvents();
 }
 },[currentUser._id])
-
-
 const handleShowMore=async()=>{
   const startIndex=userEvents.length;
   try{
@@ -59,7 +51,7 @@ const handleShowMore=async()=>{
       if( data.event.length < 9){
 
         setShowMore(false);
-        
+
       }
     }
   } catch(error)
@@ -67,7 +59,6 @@ const handleShowMore=async()=>{
     console.log(error.message);
   }
 }
-
 const handleDeleteEvent=async()=>{
   setShowModal(false);
   try{
@@ -85,7 +76,6 @@ if(!res.ok)
 else{
   setUserEvents((prev)=>prev.filter((event)=>event._id!==eventIdToDelete));//to update the posts and filter out those who aren't deleted
 }
-
 }catch(error){
     console.log(error.message);
   }
@@ -131,7 +121,9 @@ function convertTo12Hour(time) {
           {new Date(event.date).toISOString().slice(0, 10)}
         </Table.Cell>
         <Table.Cell>
-          {convertTo12Hour(event.time)}
+          {
+
+          convertTo12Hour(event.time)}
         </Table.Cell>
         <Table.Cell className='flex justify-center items-center mt-3'>
           {event.tickets.length>0?event.tickets.length:'No tickets'}
@@ -202,5 +194,4 @@ function convertTo12Hour(time) {
     </div>
   )
 }
-
 export default DashEvents

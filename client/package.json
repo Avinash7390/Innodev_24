@@ -11,15 +11,11 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.1",
-    "bootstrap": "^5.3.3",
+   
     "firebase": "^10.8.1",
     "flowbite-react": "^0.7.2",
-<<<<<<< HEAD
     "font-awesome": "^4.7.0",
-||||||| c66fc27
-=======
     "html-to-text": "^9.0.5",
->>>>>>> dd1c0caa839c400395802c258cbcac377b2d32e2
     "react": "^18.2.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",
@@ -32,12 +28,8 @@
     "react-time-picker": "^6.6.0",
     "recharts": "^2.12.2",
     "redux-persist": "^6.0.0",
-<<<<<<< HEAD
     "socket.io-client": "^4.7.4",
-||||||| c66fc27
-=======
     "styled-components": "^6.1.8",
->>>>>>> dd1c0caa839c400395802c258cbcac377b2d32e2
     "tailwind-scrollbar": "^3.1.0"
   },
   "devDependencies": {

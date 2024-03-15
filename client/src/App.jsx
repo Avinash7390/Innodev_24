@@ -19,7 +19,7 @@ import EventPage from "./pages/EventPage";
 import ManageEvent from "./AdminAnalytics/pages/ManageEvent";
 import SingleEventAnalytics from "./AdminAnalytics/pages/SingleEventAlalytics";
 import AllEventAnalytics from "./AdminAnalytics/pages/AllEventAlalytics";
-import GlobalChat from "./pages/GlobalChat";
+
 
 const App = () => {
   return (
@@ -47,8 +47,8 @@ const App = () => {
             <Route path="/update/:eventId" element={<UpdateEvent />} />
           </Route>
 
-          <Route path="/global" element={<GlobalChat/>}/>
-         
+       
+         <Route path="/event/:eventSlug" element={<EventPage />} />
         </Routes>
         <FooterComp />
       </BrowserRouter>

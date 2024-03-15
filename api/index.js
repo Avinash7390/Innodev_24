@@ -5,14 +5,11 @@ import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
 import path from "path";
-import { createServer } from "http";
-import { Server } from "socket.io";
-import {v4 as uuidv4} from "uuid"
-
-
 import eventRoutes from './routes/event.route.js';
-dotenv.config();
 
+
+
+dotenv.config();
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
@@ -21,25 +18,15 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-
 const app = express();
-
-
-
-
-
 app.use(express.json());
-
 app.use(cookieParser());
-
 app.listen(3000, () => {
   console.log("Server is listening on port 3000");
 });
-
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use('/api/event',eventRoutes);
-
 app.use((err, req, res, next) => {
   //middleware for handling errors
   const statusCode = err.statusCode || 500;
@@ -50,8 +37,7 @@ app.use((err, req, res, next) => {
     statusCode,
   });
 });
-
-const httpServer = createServer();
+/*const httpServer = createServer();
 const io = new Server(httpServer,{
   cors: {
     origin: "http://localhost:4000",
@@ -80,4 +66,4 @@ io.on("connection",async(socket)=>{
 })
 
 console.log("listening to port...");
-httpServer.listen(process.env.PORT || 4000);
+httpServer.listen(process.env.PORT || 4000);*/
