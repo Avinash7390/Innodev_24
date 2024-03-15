@@ -87,10 +87,10 @@ const EventPage = () => {
   return (
     <main className='  p-3 flex flex-col max-w-6xl mx-auto min-h-screen'>
 
-<h1 className='text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl hover:opacity-70 transiton duration-100 cursor-pointer'>{event&&event.title}</h1>
+<h1 className='text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl hover:opacity-70 transiton duration-0.1 cursor-pointer'>{event&&event.title}</h1>
 <Link to={`/search?location=${event&&event.location}`} className='self-center mt-3'>
 <Button className='flex' color='gray' pill size='lg'>
-  <ImLocation  size={30} className=' hover:text-green-500 transition duration-100'/>
+  <ImLocation  size={30} className=' hover:text-zinc-950 dark:hover:text-green-500 transition duration-100'/>
   <div className='text-2xl hover:opacity-70 transition duration-100'>{event&&event.location}</div></Button>
 </Link>
 
