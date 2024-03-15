@@ -131,9 +131,7 @@ function convertTo12Hour(time) {
           {new Date(event.date).toISOString().slice(0, 10)}
         </Table.Cell>
         <Table.Cell>
-          {
-          
-          convertTo12Hour(event.time)}
+          {convertTo12Hour(event.time)}
         </Table.Cell>
         <Table.Cell className='flex justify-center items-center mt-3'>
           {event.tickets.length>0?event.tickets.length:'No tickets'}

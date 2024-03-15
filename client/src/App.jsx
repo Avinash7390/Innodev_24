@@ -12,6 +12,10 @@ import PrivateRoute from "./components/PrivateRoute";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import CreateEvent from "./pages/CreateEvent";
 import UpdateEvent from "./pages/UpdateEvent";
+import EventPage from "./pages/EventPage";
+
+
+
 import ManageEvent from "./AdminAnalytics/pages/ManageEvent";
 import SingleEventAnalytics from "./AdminAnalytics/pages/SingleEventAlalytics";
 import AllEventAnalytics from "./AdminAnalytics/pages/AllEventAlalytics";
@@ -41,6 +45,7 @@ const App = () => {
             <Route path="/create" element={<CreateEvent />} />
             <Route path="/update/:eventId" element={<UpdateEvent />} />
           </Route>
+          <Route path="/event/:eventSlug" element={<EventPage/>} />
         </Routes>
         <FooterComp />
       </BrowserRouter>
