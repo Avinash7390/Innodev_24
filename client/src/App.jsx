@@ -14,12 +14,10 @@ import CreateEvent from "./pages/CreateEvent";
 import UpdateEvent from "./pages/UpdateEvent";
 import EventPage from "./pages/EventPage";
 
-
-
 import ManageEvent from "./AdminAnalytics/pages/ManageEvent";
 import SingleEventAnalytics from "./AdminAnalytics/pages/SingleEventAlalytics";
 import AllEventAnalytics from "./AdminAnalytics/pages/AllEventAlalytics";
-
+import AttendeesList from "./AdminAnalytics/components/AttendeesList";
 
 const App = () => {
   return (
@@ -47,8 +45,8 @@ const App = () => {
             <Route path="/update/:eventId" element={<UpdateEvent />} />
           </Route>
 
-       
-         <Route path="/event/:eventSlug" element={<EventPage />} />
+          <Route path="/event/:eventSlug" element={<EventPage />} />
+          <Route path="/event-attendees" element={<AttendeesList />} />
         </Routes>
         <FooterComp />
       </BrowserRouter>
