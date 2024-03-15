@@ -126,7 +126,7 @@ console.log(formData);
 
     if(res.ok){
       setPublishError(null);
-      navigate(`/events/${data.slug}`);
+      navigate(`/event/${data.slug}`);
     }
 
 
@@ -188,7 +188,7 @@ function convertTo12Hour(time) {
   type="date"
   onChange={(e) =>{ setFormData({ ...formData, date: e.target.value });
   console.log(e.target.value);
-  console.log(formData);
+
   }
   }
 />
