@@ -12,8 +12,10 @@ import { FaTicketAlt } from "react-icons/fa";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import { Spinner } from 'flowbite-react';
 const DashEvents = () => {
-  const {currentUser}=useSelector((state)=>state.user)
+  const {currentUser}=useSelector((state)=>state.user);
+  const [loading, setLoading] = useState(true);
 const [userEvents,setUserEvents]=useState([]);
 const[showMore,setShowMore]=useState(true);
 const[showModal,setShowModal]=useState(false);
@@ -21,18 +23,27 @@ const [eventIdToDelete,setEventIdToDelete]=useState('');
 useEffect(()=>{
 const fetchEvents=async()=>{
   try{
+    setLoading(true);
     const res=await fetch(`/api/event/getEvents?userId=${currentUser._id}`)
     const data=await res.json()
     console.log(data);
-    if(res.ok)
+   
+    if(!res.ok)
     {
+      setLoading(false);
+      return;
+    }
+   
+    if (res.ok) {
       setUserEvents(data.event)
       if(data.event.length<9){
         setShowMore(false);
+      setLoading(false);
       }
+      
     }
   }catch(error)
-  {
+  {  
     console.log(error.message)
   }
 }
@@ -41,6 +52,12 @@ if(currentUser.isAdmin)
   fetchEvents();
 }
 },[currentUser._id])
+if (loading) 
+return (
+  <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center'>
+  <Spinner className='w-12 h-12 transition-all duration-500 ease-in-out' />
+</div>
+);
 const handleShowMore=async()=>{
   const startIndex=userEvents.length;
   try{
