@@ -38,8 +38,9 @@ const fetchEvents=async()=>{
       setUserEvents(data.event)
       if(data.event.length<9){
         setShowMore(false);
-      setLoading(false);
+     
       }
+      setLoading(false);
       
     }
   }catch(error)
