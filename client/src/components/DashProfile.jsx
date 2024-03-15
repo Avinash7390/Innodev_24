@@ -145,7 +145,7 @@ const DashProfile = () => {
           type="text"
           id="username"
           placeholder="Username"
-          className="bg-slate-100 rounded-lg p-3"
+          className="bg-slate-100 dark:bg-slate-300 dark:text-slate-700 rounded-lg p-3"
           onChange={handleChange}
         />
         <input
@@ -153,14 +153,14 @@ const DashProfile = () => {
           type="email"
           id="email"
           placeholder="Email"
-          className="bg-slate-100 rounded-lg p-3"
+          className="bg-slate-100 dark:bg-slate-300 dark:text-slate-700 rounded-lg p-3"
           onChange={handleChange}
         />
         <input
           type="password"
           id="password"
           placeholder="Password"
-          className="bg-slate-100 rounded-lg p-3"
+          className="bg-slate-100  dark:bg-slate-300 dark:text-slate-700 rounded-lg p-3"
           onChange={handleChange}
         />
         <Button

@@ -19,6 +19,9 @@ export default function SignIn() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     dispatch(signInFailure(null));
@@ -83,8 +86,8 @@ if(!formData.email || !formData.password)
               />
             </div>
             <div className="flex flex-col">
-              <Label value="Your password" />
-              <input
+              <Label className="mb-[2px]" value="Your password" />
+              <TextInput
                 type='password'
                 placeholder='**********'
                 id='password'

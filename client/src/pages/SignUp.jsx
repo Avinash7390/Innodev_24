@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
-import { Alert, Button, Label,Spinner, TextInput } from "flowbite-react";
+import { Alert, Button, Label,Spinner} from "flowbite-react";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -69,33 +69,33 @@ if(res.ok)
         <div className="flex-1">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col">
-              <Label value="Your username " />
-              <TextInput
+              <Label className="mb-1" value="Your username " />
+              <input
              type='text'
              placeholder='Username'
              id='username'
              onChange={handleChange}
-             
+             className=" dark:bg-slate-900 dark:text-slate-400  rounded-md"
               />
             </div>
             <div className="flex flex-col">
-              <Label value="Your email"></Label>
-              <TextInput
+              <Label className="mb-1" value="Your email"></Label>
+              <input
                type='email'
                placeholder='name@company.com'
                id='email'
                onChange={handleChange}
-                
+                className=" dark:bg-slate-900 dark:text-slate-400  rounded-md"
               />
             </div>
             <div className="flex flex-col">
-              <Label value="Your password" />
-              <TextInput
+              <Label className="mb-1" value="Your password" />
+              <input
                 type='password'
                 placeholder='Password'
                 id='password'
                 onChange={handleChange}
-                
+                className=" dark:bg-slate-900 dark:text-slate-400  rounded-md mb-6"
               />
             </div>
 
