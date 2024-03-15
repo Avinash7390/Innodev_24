@@ -2,8 +2,19 @@ import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
+import { z } from "zod";
+
 export const signup = async (req, res, next) => {
+  const emailSchema = z.string().email().refine(email => email.endsWith('@gmail.com') || email.endsWith('@mnnit.ac.in'), {
+    message: 'Email must end with @gmail.com or @mnnit.ac.in',
+  });
   const { username, email, password } = req.body;
+
+  const { success, error } = emailSchema.safeParse(email);
+  if (!success) {
+    return next(errorHandler(400, "Invalid email input"));
+  }
+  
   try {
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
