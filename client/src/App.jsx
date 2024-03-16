@@ -18,6 +18,8 @@ import ManageEvent from "./AdminAnalytics/pages/ManageEvent";
 import SingleEventAnalytics from "./AdminAnalytics/pages/SingleEventAlalytics";
 import AllEventAnalytics from "./AdminAnalytics/pages/AllEventAlalytics";
 import AttendeesList from "./AdminAnalytics/components/AttendeesList";
+import PaymentFailed from "./components/PaymentFailed";
+import PaymentSuccess from "./components/PaymentSuccess";
 
 const App = () => {
   return (
@@ -47,6 +49,14 @@ const App = () => {
 
           <Route path="/event/:eventSlug" element={<EventPage />} />
           <Route path="/event-attendees" element={<AttendeesList />} />
+          <Route
+            path="/payment-success/:eventId/:userId"
+            element={<PaymentSuccess />}
+          />
+          <Route
+            path="/payment-failed/:eventId/:userId"
+            element={<PaymentFailed />}
+          />
         </Routes>
         <FooterComp />
       </BrowserRouter>

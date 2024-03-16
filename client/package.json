@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.1",
-   
+    "@stripe/stripe-js": "^3.0.10",
+    "axios": "^1.6.8",
     "firebase": "^10.8.1",
     "flowbite-react": "^0.7.2",
     "font-awesome": "^4.7.0",

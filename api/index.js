@@ -5,9 +5,8 @@ import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
 import path from "path";
-import eventRoutes from './routes/event.route.js';
-
-
+import eventRoutes from "./routes/event.route.js";
+import registerAndMakePayment from "./routes/registerAndPaymentRoute.js";
 
 dotenv.config();
 mongoose
@@ -26,7 +25,8 @@ app.listen(3000, () => {
 });
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
-app.use('/api/event',eventRoutes);
+app.use("/api/event", eventRoutes);
+app.use("/api/payment", registerAndMakePayment);
 app.use((err, req, res, next) => {
   //middleware for handling errors
   const statusCode = err.statusCode || 500;
