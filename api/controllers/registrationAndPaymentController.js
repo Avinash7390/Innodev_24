@@ -53,6 +53,15 @@ const registerForEventController = async (req, res, next) => {
   if (!userId) {
     return next(errorHandler(400, "Please Provide UserId"));
   }
+
+  const prevUser = await Register.findOne({ eventId, userId });
+  if (prevUser) {
+    return res.status(200).json({
+      message: "User is already registered for the event!!",
+      userData: prevUser,
+      ok: true,
+    });
+  }
   const registeredUser = await Register.create({
     eventId,
     userId,
@@ -60,8 +69,38 @@ const registerForEventController = async (req, res, next) => {
 
   res.status(200).json({
     message: "User has successfully registered for the event!!",
-    user: registeredUser,
+    userData: registeredUser,
+    ok: true,
   });
 };
 
-export { registerAndMakePaymentController, registerForEventController };
+const getRegisteredUser = async (req, res, next) => {
+  // const { eventId, userId } = req.params;
+  const eventId = req.params.eventId;
+  const userId = req.params.userId;
+  if (!eventId) {
+    return next(errorHandler(400, "Please Provide eventId"));
+  }
+  if (!userId) {
+    return next(errorHandler(400, "Please Provide UserId"));
+  }
+
+  const user = await Register.findOne({ eventId, userId });
+  if (user) {
+    res.status(200).json({
+      ok: true,
+      userData: user,
+      message: "User fetched Successfully!",
+    });
+  } else {
+    res.status(200).json({
+      ok: false,
+    });
+  }
+};
+
+export {
+  registerAndMakePaymentController,
+  registerForEventController,
+  getRegisteredUser,
+};

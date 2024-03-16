@@ -87,15 +87,27 @@ const EventPage = () => {
     const stripe = await loadStripe(
       "pk_test_51Oufb1SIR9oMWB8a1wc6gZSgOs3m4vTd6DYIup7jE5yyRky351W1nDEPAgzcmXqsuXaNqg1pfFlFall8OAHZZhKR00TpCXsACh"
     );
+    // console.log(currentUser?._id, event?._id);
+    const prevUser = await axios.get(
+      `/api/payment/get-registered-user/${event._id}/${currentUser._id}`
+    );
+    console.log(prevUser);
+
+    if (prevUser?.data?.ok) {
+      navigate(`/payment-success/${event?._id}/${currentUser?._id}`);
+      return;
+    }
 
     const response = await axios.post(
       "/api/payment/register-and-make-payment-session",
-      { eventId: event._id, userId: currentUser._id }
+      { eventId: event?._id, userId: currentUser?._id }
     );
     // console.log(response);
-    const result = stripe.redirectToCheckout({
-      sessionId: response?.data?.sessionID,
-    });
+    if (!prevUser?.data?.ok) {
+      const result = stripe.redirectToCheckout({
+        sessionId: response?.data?.sessionID,
+      });
+    }
     // console.log(result);
   };
 
