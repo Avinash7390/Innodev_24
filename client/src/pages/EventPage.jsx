@@ -50,11 +50,7 @@ const EventPage = () => {
         setLoading(true);
         const res = await fetch(`/api/event/getEvents?slug=${eventSlug}`);
         const data = await res.json();
-<<<<<<< HEAD
-
-=======
         console.log(data.event[0]._id);
->>>>>>> 1a4e69e555c3c184854415544cf3aaf25a2f04db
         if (!res.ok) {
           setError(true);
           setLoading(false);
@@ -75,7 +71,6 @@ const EventPage = () => {
       }
     };
     fetchEvent();
-    
   }, [eventSlug]);
 
   if (loading)
@@ -187,7 +182,7 @@ const EventPage = () => {
         ) : (
           <div className="justify-center flex w-full -mt-2">
             <Button color="green" pill size="lg" onClick={handlePayment}>
-              Register
+              Pay/Register
             </Button>
           </div>
         )}
