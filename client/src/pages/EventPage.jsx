@@ -18,6 +18,31 @@ const EventPage = () => {
   const [eventData, setEventData] = useState([]);
   const navigate = useNavigate();
 
+  const [selectedTickets, setSelectedTickets] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+
+
+  const handleTicketSelect = (ticket) => {
+    if (selectedTickets.includes(ticket)) {
+      // Deselect the ticket
+      setSelectedTickets(selectedTickets.filter(t => t !== ticket));
+      setTotalPrice(totalPrice - ticket.price);
+    } else {
+      // Check if the user can select more tickets
+      if (selectedTickets.length < event.tickets.length) {
+        // Check if the total price won't exceed the sum of all ticket prices
+        const sumOfTicketPrices = event.tickets.reduce((sum, ticket) => sum + ticket.price, 0);
+        if (totalPrice + ticket.price <= sumOfTicketPrices) {
+          // Select the ticket
+          setSelectedTickets([...selectedTickets, ticket]);
+          setTotalPrice(totalPrice + ticket.price);
+        }
+      }
+    }
+    console.log(selectedTickets);
+  };
+
   function convertTo12Hour(time) {
     // If time already contains 'AM' or 'PM', return it as is
     if (time.includes("AM") || time.includes("PM")) {
@@ -50,7 +75,7 @@ const EventPage = () => {
         setLoading(true);
         const res = await fetch(`/api/event/getEvents?slug=${eventSlug}`);
         const data = await res.json();
-        console.log(data.event[0]._id);
+        
         if (!res.ok) {
           setError(true);
           setLoading(false);
@@ -59,6 +84,7 @@ const EventPage = () => {
         if (res.ok) {
           setEvent(data.event[0]);
           setEventData(data.event);
+          console.log(data.event);
           setLoading(false);
           setError(false);
 
@@ -91,7 +117,7 @@ const EventPage = () => {
     const prevUser = await axios.get(
       `/api/payment/get-registered-user/${event._id}/${currentUser._id}`
     );
-    console.log(prevUser);
+   
 
     if (prevUser?.data?.ok) {
       navigate(`/payment-success/${event?._id}/${currentUser?._id}`);
@@ -165,18 +191,16 @@ const EventPage = () => {
           className="hover:rotate-90 transform duration-200 my-auto "
           size={30}
         />
-        {event &&
-          event.tickets.map((ticket, index) => (
-            <Button
-              className="max-w-[100px] p-1  "
-              key={index}
-              color="gray"
-              pill
-              size="xs"
-            >
-              {ticket.label}
-            </Button>
-          ))}
+        {event && event.tickets.map((ticket, index) => (
+  <button
+  className={`max-w-[100px] rounded-md p-2 text-xl hover:opacity-90  ${selectedTickets.includes(ticket) ? 'selected bg-teal-500 dark:bg-blue-800 border-teal-900 dark:border-slate-300 border-[3px] text-white ' : 'bg-gray-400 text-slate-950'} `}
+  key={index}
+
+  onClick={() => !currentUser.isAdmin && handleTicketSelect(ticket)}
+>
+  {ticket.name}
+</button>
+))}
       </div>
       <div className="self-center mt-12">
         {currentUser === null ? (

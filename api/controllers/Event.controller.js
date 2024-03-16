@@ -9,8 +9,9 @@ export const create = async(req,res,next)=>{
 
    if(!req.body.title || !req.body.content || !req.body.date || !req.body.location || !req.body.tickets.length)
    {
-   
-    
+   console.log(req.body.tickets);
+
+    console.log(req.body.tickets.length);
     return next(errorHandler(400,'Please provide all fields'))
    }
    const existingEvent = await Event.findOne({ title: req.body.title });
