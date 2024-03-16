@@ -5,6 +5,8 @@ import { Spinner, Button } from "flowbite-react";
 import { FaTicketAlt } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
 import { useSelector } from "react-redux";
+import { loadStripe } from "@stripe/stripe-js/pure";
+import axios from "axios";
 
 const EventPage = () => {
   const { eventSlug } = useParams();
@@ -13,6 +15,7 @@ const EventPage = () => {
   const [event, setEvent] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
   const [recentEvents, setRecentEvents] = useState(null);
+  const [eventData, setEventData] = useState([]);
   const navigate = useNavigate();
 
   function convertTo12Hour(time) {
@@ -47,7 +50,7 @@ const EventPage = () => {
         setLoading(true);
         const res = await fetch(`/api/event/getEvents?slug=${eventSlug}`);
         const data = await res.json();
-        console.log(data);
+
         if (!res.ok) {
           setError(true);
           setLoading(false);
@@ -55,8 +58,11 @@ const EventPage = () => {
         }
         if (res.ok) {
           setEvent(data.event[0]);
+          setEventData(data.event);
           setLoading(false);
           setError(false);
+
+          // console.log(currentUser._id);
         }
       } catch (error) {
         console.log(error.message);
@@ -75,6 +81,22 @@ const EventPage = () => {
     );
   const handleManageClick = () => {
     navigate("/manage-event");
+  };
+
+  const handlePayment = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51Oufb1SIR9oMWB8a1wc6gZSgOs3m4vTd6DYIup7jE5yyRky351W1nDEPAgzcmXqsuXaNqg1pfFlFall8OAHZZhKR00TpCXsACh"
+    );
+
+    const response = await axios.post(
+      "/api/payment/register-and-make-payment-session",
+      { eventId: event._id, userId: currentUser._id }
+    );
+    // console.log(response);
+    const result = stripe.redirectToCheckout({
+      sessionId: response?.data?.sessionID,
+    });
+    // console.log(result);
   };
 
   return (
@@ -159,7 +181,7 @@ const EventPage = () => {
           </div>
         ) : (
           <div className="justify-center flex w-full -mt-2">
-            <Button color="green" pill size="lg">
+            <Button color="green" pill size="lg" onClick={handlePayment}>
               Register
             </Button>
           </div>
