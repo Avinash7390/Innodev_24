@@ -27,8 +27,8 @@ const eventSchema = new mongoose.Schema({
     required: true,
   },
   tickets: [{
-    label: String,
-    value: String,
+    name: String,
+    price: Number,
   }],
   image: {
     type: String,

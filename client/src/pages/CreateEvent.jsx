@@ -12,6 +12,9 @@ import ReactSelect from 'react-select';
 import { Form, useNavigate } from 'react-router-dom';
 import { htmlToText } from 'html-to-text';
 
+
+
+
 const CreateEvent = () => {
 
 const [file,setFile]=useState(null);
@@ -19,21 +22,43 @@ const [imageUploadProgress,setImageUploadProgress]=useState(null);
 const [imageUploadError,setImageUploadError]=useState(null);
 const [formData,setFormData]=useState({});
 const [publishError,setPublishError]=useState(null);
+
+const [tickets, setTickets] = useState([{ name: '', price: '' }]);
+
+
+
+
 const navigate = useNavigate();
-
 const [locationError, setLocationError] = useState('');
-const options = [
-  { value: 'A', label: 'VIP Room' },
-  { value: 'B', label: 'Front Row Left Wing' },
-  { value: 'C', label: 'Front Row Right Wing' },
-  { value: 'D', label: 'Middle Row Left Wing' },
-  { value: 'E', label: 'Middle Row Right Wing' },
-  { value: 'F', label: 'Back Row Left Wing' },
-  { value: 'G', label: 'Back Row Right Wing' },
-  { value: 'H', label: 'Upstands' },
-  { value: 'I', label: 'Downstands' },
 
-];
+
+const handleTicketChange = (index, event) => {
+  const { value } = event.target;
+  const isValid = /^\d+$/.test(value); // This regex matches only numbers
+
+  if (isValid) {
+    // Your existing logic here
+  } else {
+    alert('Invalid input. Please enter only numbers.');
+  }
+  const values = [...tickets];
+  values[index][event.target.name] = event.target.value;
+  setTickets(values);
+ 
+
+};
+
+const handleAddTicket = () => {
+  setTickets([...tickets, { name: '', price: '' }]);
+  
+};
+
+
+const handleRemoveTicket = (index) => {
+  const values = [...tickets];
+  values.splice(index, 1);
+  setTickets(values);
+};
 
 const handleUploadImage=async ()=>{
   try{
@@ -81,16 +106,13 @@ console.log(error);
 
 
 
-const handleSelectChange = (selectedOptions) => {
-  setFormData({ ...formData, tickets: selectedOptions });
 
-};
 
 
 
 const handleSubmit=async(e)=>{
   e.preventDefault();
-console.log(formData);
+
   const dateError = validateDate(formData.date);
   if (dateError) {
     setPublishError(dateError);
@@ -104,7 +126,12 @@ console.log(formData);
     setPublishError(locationError);
     return;
   }
-  
+  const finalFormData = {
+    ...formData,
+    tickets,
+  };
+
+  console.log(finalFormData);
 
   try{
     const res=await fetch('/api/event/create',{
@@ -112,7 +139,7 @@ console.log(formData);
       headers:{
         'Content-Type':'application/json',
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(finalFormData),
     });
   
     const data=await res.json();
@@ -136,6 +163,8 @@ console.log(formData);
     setPublishError('Something went wrong');
   }
 }
+
+
 const validateLocation = (location) => {
   const regex = /[!@#$%^&*(),.?":{}|<>\]0-9]/g;
  
@@ -208,12 +237,38 @@ function convertTo12Hour(time) {
         />
         {locationError && <p className="text-xl text-red-400">{locationError}</p>}
 
-        <ReactSelect
-        placeholder="Select Tickets for this event" 
-  isMulti
-  options={options}
-  onChange={handleSelectChange}
-/>
+        {tickets.map((ticket, index) => (
+          <div key={index} className="flex flex-wrap gap-2 sm:gap-4">
+            <TextInput
+            className=" w-[35%]"
+              type="text"
+              name="name"
+              placeholder="Ticket Name"
+              value={ticket.name}
+              required
+              onChange={(event) => { handleTicketChange(index, event);
+              
+              }}
+            />
+            <TextInput
+            className="w-[30%]"
+              type="number"
+              name="price"
+              placeholder="Ticket Price"
+              value={ticket.price}
+              required
+              onChange={(event) => handleTicketChange(index, event)}
+            />
+            <Button className=" sm:w-full text-xs w-[70px] sm:text-lg max-w-[80px] " type="button" color="red"  onClick={() => handleRemoveTicket(index)} outline>
+        Remove
+        </Button>
+          </div>
+        ))}
+       
+      
+        <Button className="w-full sm:w-[30%] self-center"  color="purple" onClick={handleAddTicket} outline>
+        Add Ticket
+        </Button>
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
           <FileInput type="file" accept="image/*" onChange={(e)=>setFile(e.target.files[0])} />
           <Button
