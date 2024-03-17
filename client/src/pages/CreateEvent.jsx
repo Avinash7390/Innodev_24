@@ -33,14 +33,7 @@ const [locationError, setLocationError] = useState('');
 
 
 const handleTicketChange = (index, event) => {
-  const { value } = event.target;
-  const isValid = /^\d+$/.test(value); // This regex matches only numbers
-
-  if (isValid) {
-    // Your existing logic here
-  } else {
-    alert('Invalid input. Please enter only numbers.');
-  }
+ 
   const values = [...tickets];
   values[index][event.target.name] = event.target.value;
   setTickets(values);
@@ -131,7 +124,7 @@ const handleSubmit=async(e)=>{
     tickets,
   };
 
-  console.log(finalFormData);
+ 
 
   try{
     const res=await fetch('/api/event/create',{
@@ -154,6 +147,7 @@ const handleSubmit=async(e)=>{
     if(res.ok){
       setPublishError(null);
       navigate(`/event/${data.slug}`);
+      console.log(finalFormData);
     }
 
 
