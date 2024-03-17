@@ -1,7 +1,9 @@
 import React from "react";
 import AttendeeList from "../functionalcomponents/AttendeeList";
+import { useSelector } from "react-redux";
 
 const AttendeesList = () => {
+  const totalPrice=useSelector(state=>state.ticket.totalPrice);
   const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   return (
@@ -24,7 +26,7 @@ const AttendeesList = () => {
                     <span>{data}</span>
                     <span>John Doe</span>
                     <span>VIP</span>
-                    <span>$100</span>
+                    <span>${totalPrice}</span>
                     <span>Checked-In</span>
                   </li>
                 </>
