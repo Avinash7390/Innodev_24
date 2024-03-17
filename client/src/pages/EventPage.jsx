@@ -8,7 +8,7 @@ import { useSelector,useDispatch } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js/pure";
 import axios from "axios";
 import { setConfirmedTickets,setFinalPrice } from "../redux/ticket/ticketSlice";
-
+import { FaIndianRupeeSign } from "react-icons/fa6";
 
 const EventPage = () => {
   const { eventSlug } = useParams();
@@ -22,7 +22,7 @@ const EventPage = () => {
   const dispatch = useDispatch();
   const [selectedTickets, setSelectedTickets] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-
+console.log(selectedTickets);
 
 
   const handleTicketSelect = (ticket) => {
@@ -81,7 +81,7 @@ const EventPage = () => {
         setLoading(true);
         const res = await fetch(`/api/event/getEvents?slug=${eventSlug}`);
         const data = await res.json();
-        console.log(data);
+        
         if (!res.ok) {
           setError(true);
           setLoading(false);
@@ -90,7 +90,7 @@ const EventPage = () => {
         if (res.ok) {
           setEvent(data.event[0]);
           setEventData(data.event);
-          console.log(data.event[0].tickets);
+          
           setLoading(false);
           setError(false);
 
@@ -146,7 +146,7 @@ const EventPage = () => {
   };
 
   return (
-    <div className="bg-blue-200 bg-opacity-30">
+    <div className="bg-blue-900 bg-opacity-20">
     <main className="  p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
       <h1 className="text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl hover:opacity-70 transiton duration-0.1 cursor-pointer">
         {event && event.title}
@@ -169,7 +169,7 @@ const EventPage = () => {
       <img
         src={event && event.image}
         alt={event && event.title}
-        className="self-center object-cover border-[2px] border-blue-700 rounded-2xl border-opacity-40 w-[70%] h-[400px] xl:max-w-300px max-h-300px p-3 mt-10"
+        className="self-center object-cover   border-blue-800 dark:border-slate-500 border-[4px] rounded-2xl border-opacity-40 w-[70%] h-[400px] xl:max-w-300px max-h-300px mt-10"
       />
 
       <div className="flex justify-between p-3 border-b border-slate-500 w-full max-w-2xl text-xs mx-auto">
@@ -211,7 +211,11 @@ const EventPage = () => {
   {ticket.name}
 </Button>
 ))}
+
+
+
       </div>
+      <div className="flex text-3xl">Total Bill :<div className="flex"><FaIndianRupeeSign size={25} className="mt-[8px] mr-[2px] ml-[10px]" /><div className="mt-[0.5px] transition-all duration-100">{totalPrice}</div></div> </div>
       <div className="self-center mt-12">
         {currentUser === null ? (
           <Link to="/sign-in">
