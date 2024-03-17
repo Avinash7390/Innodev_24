@@ -26,10 +26,7 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  tickets: [{
-    name: String,
-    price: Number,
-  }],
+  tickets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Ticket' }], 
   image: {
     type: String,
     default:

@@ -12,7 +12,7 @@ import ReactSelect from 'react-select';
 import {  useNavigate , useParams } from 'react-router-dom';
 import { htmlToText } from 'html-to-text'; 
 import { useSelector } from "react-redux";
-import { set } from "mongoose";
+import {  Spinner } from 'flowbite-react';
 const UpdateEvent = () => {
 
 const [file,setFile]=useState(null);
@@ -28,9 +28,13 @@ const {currentUser}=useSelector((state)=>state.user);
 
 
 const [tickets, setTickets] = useState([{ name: '', price: '' }]);
+const [loading, setLoading] = useState(true);
+
+
 
 useEffect(()=>{
   try {
+    setLoading(true);
     const fetchEvent = async () => {
       const res = await fetch(`/api/event/getEvents?eventId=${eventId}`);
       const data = await res.json();
@@ -56,13 +60,14 @@ useEffect(()=>{
       if (!res.ok) {
         console.log(data.message);
         setPublishError(data.message);
+        setLoading(false);
         return;
       }
   
       if (res.ok) {
         setPublishError(null);
         setFormData({ ...restOfData, date: formattedDate, time: formattedTime });
-     
+        setLoading(false);
       } 
     };
   
@@ -177,17 +182,19 @@ const handleSubmit=async(e)=>{
     });
   
     const data=await res.json();
-   
+
+  
    if(!res.ok){
     setPublishError(data.message);
     console.log(data.message);
-    console.log("shit");
+   
     return;
   }
 
 
     if(res.ok){
       setPublishError(null);
+      console.log(formData);  
       navigate(`/event/${data.slug}`);
     }
 
@@ -234,6 +241,17 @@ function convertTo12Hour(time) {
   const [hours, minutes] = time.split(':');
   return ((hours % 12) || 12) + ':' + minutes + (hours < 12 ? ' AM' : ' PM');
 }
+
+
+if (loading)
+  return (
+    <div className='flex justify-center items-center min-h-screen'>
+      <Spinner size='xl' />
+    </div>
+  );
+
+
+
 
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">

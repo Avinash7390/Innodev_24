@@ -30,8 +30,7 @@ const EventPage = () => {
       // Deselect the ticket
       setSelectedTickets(selectedTickets.filter(t => t !== ticket));
       setTotalPrice(totalPrice - ticket.price);
-      console.log(selectedTickets);
-      console.log(totalPrice);
+      
     } else {
       // Check if the user can select more tickets
       if (selectedTickets.length < event.tickets.length) {
@@ -47,7 +46,7 @@ const EventPage = () => {
     dispatch(setConfirmedTickets(selectedTickets));
     dispatch(setFinalPrice(totalPrice));
 
-    console.log(selectedTickets);
+    
   };
 
   function convertTo12Hour(time) {
@@ -82,7 +81,7 @@ const EventPage = () => {
         setLoading(true);
         const res = await fetch(`/api/event/getEvents?slug=${eventSlug}`);
         const data = await res.json();
-        
+        console.log(data);
         if (!res.ok) {
           setError(true);
           setLoading(false);
@@ -91,7 +90,7 @@ const EventPage = () => {
         if (res.ok) {
           setEvent(data.event[0]);
           setEventData(data.event);
-          console.log(data.event);
+          console.log(data.event[0].tickets);
           setLoading(false);
           setError(false);
 
@@ -124,8 +123,7 @@ const EventPage = () => {
     const prevUser = await axios.get(
       `/api/payment/get-registered-user/${event._id}/${currentUser._id}`
     );
-    console.log(selectedTickets);
-      console.log(totalPrice);
+   
    
 
     if (prevUser?.data?.ok) {
