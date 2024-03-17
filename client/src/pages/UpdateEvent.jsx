@@ -27,26 +27,17 @@ const [locationError, setLocationError] = useState('');
 const {currentUser}=useSelector((state)=>state.user);
 
 
-const options = [
-  { value: 'A', label: 'VIP Room' },
-  { value: 'B', label: 'Front Row Left Wing' },
-  { value: 'C', label: 'Front Row Right Wing' },
-  { value: 'D', label: 'Middle Row Left Wing' },
-  { value: 'E', label: 'Middle Row Right Wing' },
-  { value: 'F', label: 'Back Row Left Wing' },
-  { value: 'G', label: 'Back Row Right Wing' },
-  { value: 'H', label: 'Upstands' },
-  { value: 'I', label: 'Downstands' },
+const [tickets, setTickets] = useState([{ name: '', price: '' }]);
 
-];
 useEffect(()=>{
   try {
     const fetchEvent = async () => {
       const res = await fetch(`/api/event/getEvents?eventId=${eventId}`);
       const data = await res.json();
-  
+  console.log(data);
+  console.log(data.event[0]);
       const { date, time, ...restOfData } = data.event[0];
-  
+      setTickets(data.event[0].tickets);
       // Convert date to YYYY-MM-DD format
       const dateObj = new Date(date);
       const formattedDate = dateObj.toISOString().split('T')[0];
@@ -70,12 +61,13 @@ useEffect(()=>{
   
       if (res.ok) {
         setPublishError(null);
-        setFormData({ ...restOfData, date: formattedDate, time: formattedTime});
-       
+        setFormData({ ...restOfData, date: formattedDate, time: formattedTime });
+     
       } 
     };
   
     fetchEvent();
+    
   } catch (error) {
     console.log(error.message);
   }
@@ -83,6 +75,21 @@ useEffect(()=>{
 
 },[eventId]);
 
+const handleTicketChange = (index, event) => {
+  const values = [...tickets];
+  values[index][event.target.name] = event.target.value;
+  setTickets(values);
+};
+
+const handleAddTicket = () => {
+  setTickets([...tickets, { name: '', price: '' }]);
+};
+
+const handleRemoveTicket = (index) => {
+  const values = [...tickets];
+  values.splice(index, 1);
+  setTickets(values);
+};
 
 
 const handleUploadImage=async ()=>{
@@ -129,12 +136,11 @@ console.log(error);
 
 
 
+useEffect(() => {
+  setFormData(prevState => ({ ...prevState, tickets }));
+}, [tickets]);
 
 
-const handleSelectChange = (selectedOptions) => {
-  setFormData({ ...formData, tickets: selectedOptions });
-
-};
 
 
 
@@ -159,6 +165,8 @@ const handleSubmit=async(e)=>{
     return;
   }
 
+ 
+
   try{
     const res=await fetch(`/api/event/updateEvent/${formData._id}/${currentUser._id}`,{
       method:'PUT',
@@ -169,10 +177,11 @@ const handleSubmit=async(e)=>{
     });
   
     const data=await res.json();
-    
+   
    if(!res.ok){
     setPublishError(data.message);
     console.log(data.message);
+    console.log("shit");
     return;
   }
 
@@ -185,7 +194,7 @@ const handleSubmit=async(e)=>{
 
   }
    catch(error)
-  {
+  {  console.log(tickets);
     setPublishError('Something went wrong');
   }
 }
@@ -265,13 +274,38 @@ function convertTo12Hour(time) {
         />
         {locationError && <p className="text-xl text-red-400">{locationError}</p>}
 
-        <ReactSelect
-        placeholder="Select Tickets for this event" 
-  isMulti
-  options={options}
-  onChange={handleSelectChange}
-  value={formData.tickets}
-/>
+        {tickets.map((ticket, index) => (
+          <div key={index} className="flex flex-wrap gap-2 sm:gap-4">
+            <TextInput
+            className=" w-[35%]"
+              type="text"
+              name="name"
+              placeholder="Ticket Name"
+              value={ticket.name}
+              required
+              onChange={(event) => { handleTicketChange(index, event);
+              
+              }}
+            />
+            <TextInput
+            className="w-[30%]"
+              type="number"
+              name="price"
+              placeholder="Ticket Price"
+              value={ticket.price}
+              required
+              onChange={(event) => handleTicketChange(index, event)}
+            />
+            <Button className=" sm:w-full text-xs w-[70px] sm:text-lg max-w-[80px] " type="button" color="red"  onClick={() => handleRemoveTicket(index)} outline>
+        Remove
+        </Button>
+          </div>
+        ))}
+       
+      
+        <Button className="w-full sm:w-[30%] self-center"  color="purple" onClick={handleAddTicket} outline>
+        Add Ticket
+        </Button>
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
           <FileInput type="file" accept="image/*" onChange={(e)=>setFile(e.target.files[0])} />
           <Button
