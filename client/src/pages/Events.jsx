@@ -6,10 +6,10 @@ import { Link, useParams } from 'react-router-dom';
 import EventCard from '../components/EventCard';
 const Events = () => {
 
-  const { eventSlug } = useParams();
+ 
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [event, setEvent] = useState([]);
+ 
+  
 
   const [recentEvents, setRecentEvents] = useState(null);
 

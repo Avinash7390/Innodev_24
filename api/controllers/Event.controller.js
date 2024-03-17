@@ -1,5 +1,8 @@
 import { errorHandler } from "../utils/error.js"
 import Event from "../models/event.model.js";
+import Ticket from "../models/ticket.model.js";
+
+
 export const create = async(req,res,next)=>{
     try{
     if(!req.user.isAdmin){
@@ -7,13 +10,19 @@ export const create = async(req,res,next)=>{
     }
     
 
-   if(!req.body.title || !req.body.content || !req.body.date || !req.body.location || !req.body.tickets.length)
+   if(!req.body.title || !req.body.content || !req.body.date || !req.body.location)
    {
-   console.log(req.body.tickets);
+   
 
-    console.log(req.body.tickets.length);
     return next(errorHandler(400,'Please provide all fields'))
    }
+
+if(!req.body.tickets.length){
+    return next(errorHandler(404,'Tickets are required for an Event'))
+
+}
+
+
    const existingEvent = await Event.findOne({ title: req.body.title });
         if (existingEvent) {
             return next(errorHandler(400, 'Event Name already taken'));  
@@ -21,17 +30,21 @@ export const create = async(req,res,next)=>{
    const slug=req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g,'');
    //for seo !
 
-   
+   const tickets = await Ticket.insertMany(req.body.tickets);
+    const ticketIds = tickets.map(ticket => ticket._id);
+console.log(req.body.tickets);
+
 const newEvent=new Event( {
     ...req.body,
     slug,
-    userId:req.user.id  
+    userId:req.user.id ,
+    tickets: ticketIds, 
     
 });
 
     const savedEvent=await newEvent.save();
    return res.status(201).json(savedEvent);
-
+console.log(savedEvent);
 }catch(error){
    
     
@@ -61,7 +74,7 @@ export const getEvents=async(req,res,next)=>{
 
             ],
         }),
-    }).sort({updatedAt:sortDirection}).skip(startIndex).limit(limit);
+    }).sort({updatedAt:sortDirection}).skip(startIndex).limit(limit).populate('tickets');
 
     const totalEvents=await Event.countDocuments();
     const now=new Date();
@@ -102,8 +115,12 @@ export const updateEvent = async (req, res, next) => {
     if (!req.user.isAdmin || req.user.id !== req.params.userId) {
       return next(errorHandler(403, 'You are not allowed to update this Event'));
     }
-    if (!req.body.title || !req.body.content || !req.body.date || !req.body.location || !req.body.tickets.length) {
+    if (!req.body.title || !req.body.content || !req.body.date || !req.body.location) {
       return next(errorHandler(400, 'Please provide all fields'))
+    }
+    if(!req.body.tickets.length){
+        return next(errorHandler(404,'Tickets are required for an Event'))
+    
     }
   
     try {
@@ -117,6 +134,21 @@ export const updateEvent = async (req, res, next) => {
         }
       }
   
+      const ticketIds = [];
+      for (const ticketData of req.body.tickets) {
+        let ticket;
+        if (ticketData._id) {
+          
+          ticket = await Ticket.findByIdAndUpdate(ticketData._id, ticketData, { new: true });
+        } else {
+        
+          ticket = await Ticket.create(ticketData);
+        }
+        ticketIds.push(ticket._id);
+      }
+  
+
+
       const updatedEvent = await Event.findByIdAndUpdate(req.params.eventId, {
         $set: {
           location: req.body.location,
@@ -125,7 +157,7 @@ export const updateEvent = async (req, res, next) => {
           title: req.body.title,
           content: req.body.content,
           slug: req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, ''),
-          tickets: req.body.tickets,
+          tickets: ticketIds,
           image: req.body.image,
         }
       }, { new: true });
