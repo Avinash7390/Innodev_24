@@ -91,7 +91,7 @@ const Events = () => {
   {userEvents.length>0?(
 <>
 <div className='flex flex-col justify-center items-center mb-5'>
-    <h1 className='text-xl mt-5'>Upcoming Events</h1>
+    <h1 className='text-xl mt-5'>New Events</h1>
     <div className='flex flex-wrap gap-5 mt-5 justify-center'>
       {userEvents &&
         userEvents.map((event) => <EventCard key={event._id} event={event} />)}
