@@ -119,7 +119,7 @@ export const updateEvent = async (req, res, next) => {
       return next(errorHandler(400, 'Please provide all fields'))
     }
     if(!req.body.tickets.length){
-        return next(errorHandler(404,'Tickets are required for an Event'))
+        return next(errorHandler(400,'Tickets are required for an Event'))
     
     }
   
@@ -134,18 +134,10 @@ export const updateEvent = async (req, res, next) => {
         }
       }
   
-      const ticketIds = [];
-      for (const ticketData of req.body.tickets) {
-        let ticket;
-        if (ticketData._id) {
-          
-          ticket = await Ticket.findByIdAndUpdate(ticketData._id, ticketData, { new: true });
-        } else {
-        
-          ticket = await Ticket.create(ticketData);
-        }
-        ticketIds.push(ticket._id);
-      }
+      await Ticket.deleteMany({ _id: { $in: event.tickets } });
+
+      const tickets = await Ticket.insertMany(req.body.tickets);
+    const ticketIds = tickets.map(ticket => ticket._id);
   
 
 
