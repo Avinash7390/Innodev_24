@@ -31,12 +31,8 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/manage-event" element={<ManageEvent />} />
-          <Route
-            path="/single-event-analytics"
-            element={<SingleEventAnalytics />}
-          />
-          <Route path="/all-event-analytics" element={<AllEventAnalytics />} />
+          
+         
 
           <Route path="/AllEvents" element={<Events />} />
           <Route element={<PrivateRoute />}>
@@ -45,10 +41,17 @@ const App = () => {
           <Route element={<OnlyAdminPrivateRoute />}>
             <Route path="/create" element={<CreateEvent />} />
             <Route path="/update/:eventId" element={<UpdateEvent />} />
+            <Route path="/manage-event" element={<ManageEvent />} />
+          <Route
+            path="/single-event-analytics"
+            element={<SingleEventAnalytics />}
+          />
+            <Route path="/all-event-analytics" element={<AllEventAnalytics />} />
+            <Route path="/event-attendees" element={<AttendeesList />} />
           </Route>
 
           <Route path="/event/:eventSlug" element={<EventPage />} />
-          <Route path="/event-attendees" element={<AttendeesList />} />
+          
           <Route
             path="/payment-success/:eventId/:userId"
             element={<PaymentSuccess />}

@@ -2,6 +2,8 @@ import { registerUser as Register } from "../models/registeredUserModel.js";
 import User from "../models/user.model.js";
 import Event from "../models/event.model.js";
 import Stripe from "stripe";
+
+
 const stripe = new Stripe(
   "sk_test_51Oufb1SIR9oMWB8aBQzwT62Dh2Rs2H1zprguDiH6XqhC8SY4S8kJ7hXEj2yZsACzOTqjkhAFoeIFFHx0Ne6dj0PE00v7yeOno3"
 );

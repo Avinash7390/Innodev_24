@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { Spinner, Button } from "flowbite-react";
 import { FaTicketAlt } from "react-icons/fa";
 import { ImLocation } from "react-icons/im";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js/pure";
 import axios from "axios";
+import { setConfirmedTickets,setFinalPrice } from "../redux/ticket/ticketSlice";
+
 
 const EventPage = () => {
   const { eventSlug } = useParams();
@@ -14,10 +16,10 @@ const EventPage = () => {
   const [error, setError] = useState(false);
   const [event, setEvent] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
-  const [recentEvents, setRecentEvents] = useState(null);
+
   const [eventData, setEventData] = useState([]);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [selectedTickets, setSelectedTickets] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -28,6 +30,8 @@ const EventPage = () => {
       // Deselect the ticket
       setSelectedTickets(selectedTickets.filter(t => t !== ticket));
       setTotalPrice(totalPrice - ticket.price);
+      console.log(selectedTickets);
+      console.log(totalPrice);
     } else {
       // Check if the user can select more tickets
       if (selectedTickets.length < event.tickets.length) {
@@ -40,6 +44,9 @@ const EventPage = () => {
         }
       }
     }
+    dispatch(setConfirmedTickets(selectedTickets));
+    dispatch(setFinalPrice(totalPrice));
+
     console.log(selectedTickets);
   };
 
@@ -117,9 +124,12 @@ const EventPage = () => {
     const prevUser = await axios.get(
       `/api/payment/get-registered-user/${event._id}/${currentUser._id}`
     );
+    console.log(selectedTickets);
+      console.log(totalPrice);
    
 
     if (prevUser?.data?.ok) {
+      
       navigate(`/payment-success/${event?._id}/${currentUser?._id}`);
       return;
     }
@@ -138,6 +148,7 @@ const EventPage = () => {
   };
 
   return (
+    <div className="bg-blue-200 bg-opacity-30">
     <main className="  p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
       <h1 className="text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl hover:opacity-70 transiton duration-0.1 cursor-pointer">
         {event && event.title}
@@ -160,7 +171,7 @@ const EventPage = () => {
       <img
         src={event && event.image}
         alt={event && event.title}
-        className="self-center object-cover w-[70%] h-[400px] xl:max-w-300px max-h-300px p-3 mt-10"
+        className="self-center object-cover border-[2px] border-blue-700 rounded-2xl border-opacity-40 w-[70%] h-[400px] xl:max-w-300px max-h-300px p-3 mt-10"
       />
 
       <div className="flex justify-between p-3 border-b border-slate-500 w-full max-w-2xl text-xs mx-auto">
@@ -192,14 +203,15 @@ const EventPage = () => {
           size={30}
         />
         {event && event.tickets.map((ticket, index) => (
-  <button
-  className={`max-w-[100px] rounded-md p-2 text-xl hover:opacity-90  ${selectedTickets.includes(ticket) ? 'selected bg-teal-500 dark:bg-blue-800 border-teal-900 dark:border-slate-300 border-[3px] text-white ' : 'bg-gray-400 text-slate-950'} `}
+  <Button
+  className={`max-w-[100px] rounded-md p-2 text-xl hover:opacity-90  ${selectedTickets.includes(ticket) ? 'selected ' : ''} `}
   key={index}
-
+  color={selectedTickets.includes(ticket) ? "blue" : "gray"}
+  size="xs"
   onClick={() => !currentUser.isAdmin && handleTicketSelect(ticket)}
 >
   {ticket.name}
-</button>
+</Button>
 ))}
       </div>
       <div className="self-center mt-12">
@@ -224,6 +236,7 @@ const EventPage = () => {
         )}
       </div>
     </main>
+    </div>
   );
 };
 
