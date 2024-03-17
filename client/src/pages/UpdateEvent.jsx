@@ -38,8 +38,7 @@ useEffect(()=>{
     const fetchEvent = async () => {
       const res = await fetch(`/api/event/getEvents?eventId=${eventId}`);
       const data = await res.json();
-  console.log(data);
-  console.log(data.event[0]);
+  
       const { date, time, ...restOfData } = data.event[0];
       setTickets(data.event[0].tickets);
       // Convert date to YYYY-MM-DD format

@@ -57,16 +57,19 @@ export const getEvents=async(req,res,next)=>{
     try{
         const startIndex=parseInt(req.query.startIndex)||0;
         const limit=parseInt(req.query.limit)||9;
-        const sortDirection=req.query.order==='asc'?1:-1;
+        const sortDirection=req.query.sort==='asc'?1:-1;
         const event=await Event.find(
             {
             ...(req.query.userId&&{userId:req.query.userId}),
-         ...(req.query.location&&{location:req.query.location}),
+         
          ...(req.query.date&&{date:req.query.date}),
          ...(req.query.time&&{time:req.query.time}),
          
         ...(req.query.slug&&{slug:req.query.slug}),
         ...(req.query.eventId&&{_id:req.query.eventId}),
+        ...(req.query.location&&{
+            location:{$regex:req.query.location,$options:'i'}
+          }),
         ...(req.query.searchTerm&&{
             $or:[ 
                 {title:{$regex:req.query.searchTerm,$options:'i'}},

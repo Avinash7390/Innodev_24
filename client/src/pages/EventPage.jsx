@@ -195,17 +195,17 @@ console.log(selectedTickets);
         className="p-3 w-[70%] mx-auto post-content flex justify-center  flex-wrap "
         dangerouslySetInnerHTML={{ __html: event && event.content }}
       ></div>
-      <div className="flex gap-4 justify-center mt-4  border-b border-slate-500 pb-4">
+      <div className="flex flex-col mx-auto sm:flex-row gap-4 justify-center mt-4  border-b border-slate-500 pb-4">
         <FaTicketAlt
-          className="hover:rotate-90 transform duration-200 my-auto "
+          className="hover:rotate-90 transform duration-200 my-auto mx-auto "
           size={30}
         />
         {event && event.tickets.map((ticket, index) => (
   <Button
-  className={`max-w-[100px] rounded-md p-2 text-xl hover:opacity-90  ${selectedTickets.includes(ticket) ? 'selected ' : ''} `}
+  className={`max-w-[100px] flex flex-wrap rounded-md  hover:opacity-90  ${selectedTickets.includes(ticket) ? 'selected ' : ''} `}
   key={index}
   color={selectedTickets.includes(ticket) ? "blue" : "gray"}
-  size="xs"
+  
   onClick={() => !currentUser.isAdmin && handleTicketSelect(ticket)}
 >
   {ticket.name}
@@ -215,7 +215,8 @@ console.log(selectedTickets);
 
 
       </div>
-      <div className="flex text-3xl">Total Bill :<div className="flex"><FaIndianRupeeSign size={25} className="mt-[8px] mr-[2px] ml-[10px]" /><div className="mt-[0.5px] transition-all duration-100">{totalPrice}</div></div> </div>
+      {currentUser.isAdmin?"":(<div className="flex text-3xl">Total Bill :<div className="flex"><FaIndianRupeeSign size={25} className="mt-[8px] mr-[2px] ml-[10px]" /><div className="mt-[0.5px] transition-all duration-100">{totalPrice}</div></div> </div>)}
+      
       <div className="self-center mt-12">
         {currentUser === null ? (
           <Link to="/sign-in">

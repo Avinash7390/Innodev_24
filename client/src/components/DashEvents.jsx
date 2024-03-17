@@ -79,6 +79,7 @@ const handleShowMore=async()=>{
 }
 const handleDeleteEvent=async()=>{
   setShowModal(false);
+  
   try{
 const res=await fetch(
   `/api/event/deleteEvent/${eventIdToDelete}/${currentUser._id}`,
@@ -120,7 +121,7 @@ function convertTo12Hour(time) {
 <Table.Head>
   
   <Table.HeadCell className='flex justify-center'><FaRegCalendarAlt size={25} /></Table.HeadCell>
-  <Table.HeadCell className='item-center'><MdOutlineAccessTimeFilled size={25} /></Table.HeadCell>
+  <Table.HeadCell className=''><div className=' pl-2'><MdOutlineAccessTimeFilled size={25} /></div></Table.HeadCell>
   
   <Table.HeadCell>Ticket Types</Table.HeadCell>
   <Table.HeadCell className='flex justify-center'><TiCamera size={25}/></Table.HeadCell>
