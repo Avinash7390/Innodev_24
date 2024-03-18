@@ -1,8 +1,11 @@
 import React from 'react';
-
+import { motion } from 'framer-motion';
 export default function About() {
   return (
-    <div className="p-4">
+    <motion.div className="p-4 transition-all duration-1000"
+    initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}>
       <h1 className="text-4xl font-bold mb-4">About Our Event Management Web App</h1>
       <p className="text-lg mb-4">
         Our Event Management Web App is a platform designed with both event-goers and event organizers in mind. 
@@ -19,6 +22,6 @@ export default function About() {
       <p className="text-lg">
         Join us today and experience the future of event management!
       </p>
-    </div>
+    </motion.div>
   );
 }

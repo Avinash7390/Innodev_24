@@ -2,11 +2,16 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'flowbite-react';
+import Homebg from "../../public/home_bg.jpg";
 import { MdStarBorderPurple500 } from 'react-icons/md';
+import { motion } from 'framer-motion';
 export default function Home() {
   const {currentUser}=useSelector((state)=>state.user);
   return (
-    <div className="p-4">
+    <motion.div className="transition-all duration-1000 p-4"
+    initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}>
       <h1 className="text-4xl font-bold mb-4">Welcome to Our Event Web App!</h1>
       <p className="text-lg mb-4">
         Our platform is designed to help you discover and participate in events that you're interested in. 
@@ -19,11 +24,16 @@ export default function Home() {
       <p className="text-lg">
         Start exploring events or create your own today!
       </p>
-     <div>
-      <Link className='flex justify-center sm:flex mt-6' to='/AllEvents'><Button  gradientDuoTone="purpleToBlue" outline>
+     <div className='flex justify-center flex-col gap-4'>
+     <img className="hover:opacity-55 transition-all duration-1000 w-full h-96 object-cover rounded-lg mt-6"
+  src={Homebg}
+  alt="home_bg"
+  
+/>
+      <Link className=' self-center' to='/AllEvents'><Button  gradientDuoTone="purpleToBlue" outline>
             View Events
           </Button></Link>
       </div>
-    </div>
+    </motion.div>
   );
 }

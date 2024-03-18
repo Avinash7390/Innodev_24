@@ -2,6 +2,7 @@ import { Button, Select, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import EventCard from '../components/EventCard';
+import { date } from 'zod';
 
 export default function Search() {
   const [sidebarData, setSidebarData] = useState({
@@ -10,7 +11,7 @@ export default function Search() {
     location: '',
     date: '',
     time: '',
-   
+
   });
 
   console.log(sidebarData);
@@ -27,13 +28,14 @@ export default function Search() {
     const searchTermFromUrl = urlParams.get('searchTerm');
     const sortFromUrl = urlParams.get('sort');
     const locationFromUrl = urlParams.get('location');
-    if (searchTermFromUrl || sortFromUrl || locationFromUrl) {
+    const dateFromUrl=urlParams.get('date');
+    if (searchTermFromUrl || sortFromUrl || locationFromUrl||dateFromUrl) {
       setSidebarData({
         ...sidebarData,
         searchTerm: searchTermFromUrl,
         sort: sortFromUrl,
         location: locationFromUrl,
-        
+        date:dateFromUrl,
       });
     }
 
@@ -49,7 +51,7 @@ export default function Search() {
         const data = await res.json();
         setEvents(data.event);
         setLoading(false);
-        if (data.event.length === 6) {
+        if (data.event.length === 9) {
           setShowMore(true);
         } else {
           setShowMore(false);
@@ -71,16 +73,48 @@ export default function Search() {
         const location = e.target.value || '';
         setSidebarData({ ...sidebarData, location });
       }
-    
+      if(e.target.id==='date')
+      {
+        const date=e.target.value||'';
+        setSidebarData({...sidebarData,date});
+      }
+
   };
+  function convertDateToNormalFormat(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');  // Months are 0-indexed in JavaScript
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+
 
   const handleSubmit = (e) => {
     console.log(sidebarData.location);
+    const dateToSend = convertDateToNormalFormat(sidebarData.date);
+
     e.preventDefault();
     const urlParams = new URLSearchParams(location.search);
     urlParams.set('searchTerm', sidebarData.searchTerm);
-    urlParams.set('sort', sidebarData.sort);
+    if (sidebarData.sort) {
+        urlParams.set('sort', sidebarData.sort);
+      }
+
+if(sidebarData.location)
+{
+
     urlParams.set('location', sidebarData.location);
+
+}
+
+    
+
+    if (sidebarData.date) {
+        const dateToSend = convertDateToNormalFormat(sidebarData.date);
+        urlParams.set('date', dateToSend);
+      }
+
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
   };
@@ -98,7 +132,7 @@ export default function Search() {
     if (res.ok) {
       const data = await res.json();
       setEvents([...events, ...data.event]);
-      if (data.event.length === 6) {
+      if (data.event.length === 9 ) {
         setShowMore(true);
       } else {
         setShowMore(false);
@@ -106,13 +140,31 @@ export default function Search() {
     }
   };
 
+const handleRemoveFilters=()=>{
+
+    setSidebarData({
+        searchTerm: '',
+        sort: 'desc',
+        location: '',
+        date: '',
+        time: '',
+      });
+
+
+
+};
+
+
+
+
+
   return (
     <div className='flex flex-col md:flex-row'>
       <div className='p-7 border-b md:border-r md:min-h-screen border-gray-500'>
         <form className='flex flex-col gap-8' onSubmit={handleSubmit}>
-          <div className='flex   items-center gap-2'>
+          <div className='flex self-center   items-center gap-2'>
             <label className='whitespace-nowrap font-semibold'>
-              Search Term:
+              Search Term :
             </label>
             <TextInput
               placeholder='Search...'
@@ -122,29 +174,46 @@ export default function Search() {
               onChange={handleChange}
             />
           </div>
-          <div className='flex items-center gap-2'>
-            <label className='font-semibold'>Sort:</label>
+          <div className='flex self-center items-center gap-12 md:gap-0 md:justify-between px-5'>
+            <label className='font-semibold w-24 '>Sort :</label>
             <Select onChange={handleChange} value={sidebarData.sort} id='sort'>
               <option value='desc'>Latest</option>
               <option value='asc'>Oldest</option>
             </Select>
           </div>
-          <div className='flex items-center gap-2'>
-          <label className='whitespace-nowrap font-semibold'>
-              Location:
+          <div className='flex self-center items-center gap-2'>
+          <label className='whitespace-nowrap p-3 font-semibold'>
+              Location :
             </label>
             <TextInput
-              placeholder='Location..'
+              
               id='location'
               type='text'
               value={sidebarData.location}
               onChange={handleChange}
             />
           </div>
-         
-          <Button type='submit' outline gradientDuoTone='purpleToPink'>
+
+          <div className='flex self-center items-center md:justify-between gap-10  md:gap-8'>
+          <label className='whitespace-nowrap pl-7 font-semibold'>
+              Date:    
+            </label>
+            <input
+              
+              id='date'
+              type='date'
+              value={sidebarData.date}
+              onChange={handleChange}
+            />
+          </div>
+
+          <Button type='submit' outline gradientDuoTone='greenToBlue'>
             Apply Filters
           </Button>
+          <Button type='button' onClick={handleRemoveFilters} outline gradientDuoTone='pinkToOrange'>
+  Remove Filters
+</Button>
+          
         </form>
       </div>
       <div className='w-full'>

@@ -13,6 +13,9 @@ import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { Spinner } from 'flowbite-react';
+import { motion } from 'framer-motion';
+
+
 const DashEvents = () => {
   const {currentUser}=useSelector((state)=>state.user);
   const [loading, setLoading] = useState(true);
@@ -114,7 +117,10 @@ function convertTo12Hour(time) {
 }
 
   return (
-    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
+    <motion.div className='table-auto transition-all duration-1000 overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'
+    initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}>
       {currentUser.isAdmin && userEvents.length>0?(
 <>
 <Table hoverable className='shadow-md'> 
@@ -210,7 +216,7 @@ function convertTo12Hour(time) {
           </div>
         </Modal.Body>
       </Modal>
-    </div>
+    </motion.div>
   )
 }
 export default DashEvents
