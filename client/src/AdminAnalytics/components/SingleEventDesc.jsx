@@ -3,6 +3,7 @@ import SingleEventDescWrapper from "../functionalcomponents/SingleEventDescripti
 import SingleEventDescChildWrapper from "../functionalcomponents/SingleEventDescChild";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
+import { Spinner } from "flowbite-react";
 
 const SingleEventDesc = ({eventId }) => {
   const [loader, setLoader] = useState(true);
@@ -29,7 +30,12 @@ const SingleEventDesc = ({eventId }) => {
   }, [])
 
   // console.log(eventData);
-
+  if (loader)
+  return (
+    <div className='flex justify-center items-center min-h-screen'>
+      <Spinner size='xl' />
+    </div>
+  );
 
 
   return (

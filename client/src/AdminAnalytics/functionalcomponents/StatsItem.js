@@ -23,6 +23,7 @@ const StatsItemWrapper = styled.article`
     text-align: left;
     margin-top: 0.5rem;
     font-weight: bold;
+    color: #098d99;
   }
   .icon {
     width: 70px;
