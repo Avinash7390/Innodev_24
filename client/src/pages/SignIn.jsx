@@ -8,6 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import OAuth from "../components/OAuth";
 import { Alert, Button, Label , Spinner , TextInput } from "flowbite-react";
+import { motion } from 'framer-motion';
 
 import { useEffect } from 'react';
 export default function SignIn() {
@@ -45,10 +46,12 @@ if(!formData.email || !formData.password)
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+
       if (data.success === false) {
         dispatch(signInFailure(data.message));
         return;
       }
+
       if(res.ok)
       {
         dispatch(signInSuccess(data));
@@ -60,7 +63,10 @@ if(!formData.email || !formData.password)
     }
   };
   return (
-    <div className="min-h-screen mt-20">
+    <motion.div className="transition-all duration-1000 min-h-screen mt-20"
+    initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}>
       <div className="flex flex-col md:flex-row p-3 max-w-3xl mx-auto md:items-center gap-5">
         <div className="flex-1">
           <Link to="/" className="bold dark:text-white text-4xl">
@@ -133,6 +139,6 @@ if(!formData.email || !formData.password)
           
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

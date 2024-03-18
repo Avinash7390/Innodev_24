@@ -20,6 +20,7 @@ import AllEventAnalytics from "./AdminAnalytics/pages/AllEventAlalytics";
 import AttendeesList from "./AdminAnalytics/components/AttendeesList";
 import PaymentFailed from "./components/PaymentFailed";
 import PaymentSuccess from "./components/PaymentSuccess";
+import Search from "./pages/Search";
 
 const App = () => {
   return (
@@ -31,7 +32,7 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
-          
+          <Route path="/search" element={<Search />} />
          
 
           <Route path="/AllEvents" element={<Events />} />

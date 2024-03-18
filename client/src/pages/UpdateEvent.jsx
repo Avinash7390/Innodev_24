@@ -13,6 +13,9 @@ import {  useNavigate , useParams } from 'react-router-dom';
 import { htmlToText } from 'html-to-text'; 
 import { useSelector } from "react-redux";
 import {  Spinner } from 'flowbite-react';
+import { motion } from 'framer-motion';
+
+
 const UpdateEvent = () => {
 
 const [file,setFile]=useState(null);
@@ -38,8 +41,7 @@ useEffect(()=>{
     const fetchEvent = async () => {
       const res = await fetch(`/api/event/getEvents?eventId=${eventId}`);
       const data = await res.json();
-  console.log(data);
-  console.log(data.event[0]);
+  
       const { date, time, ...restOfData } = data.event[0];
       setTickets(data.event[0].tickets);
       // Convert date to YYYY-MM-DD format
@@ -254,7 +256,12 @@ if (loading)
 
 
   return (
-    <div className="p-3 max-w-3xl mx-auto min-h-screen">
+    <motion.div className="transition-all duration-1000 p-3 max-w-3xl mx-auto min-h-screen"
+    initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}
+    
+    >
       <h1 className="text-center text-3xl my-7 font-semibold">Update Event</h1>
       <form className="flex flex-col gap-4 " onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
@@ -375,7 +382,7 @@ if (loading)
           publishError && <Alert color='failure' className="mt-5">{publishError}</Alert>
         }
       </form>
-    </div>
+    </motion.div>
   )
   }
 export default UpdateEvent;
