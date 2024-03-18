@@ -10,30 +10,29 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const SingleEventAlalytics = () => {
-  const {eventId} = useParams();
+  const { eventId } = useParams();
   const [loader, setLoader] = useState(true);
   const [eventData, setEventData] = useState(null);
 
   useEffect(() => {
-
     const getUserData = async () => {
-      try{
+      try {
         setLoader(true);
-        const response = await axios.get(`/api/analytics/event-data/${eventId}`)
-        if(response?.data?.ok){
+        const response = await axios.get(
+          `/api/analytics/event-data/${eventId}`
+        );
+        if (response?.data?.ok) {
           setLoader(false);
           setEventData(response?.data?.singleEvent[0]);
-        }else{
+        } else {
           setLoader(true);
         }
-      }catch(err){
-
+      } catch (err) {
         console.log(err);
       }
-    }
+    };
     getUserData();
-  }, [])
-
+  }, []);
 
   const data = [
     { CheckedIn: 1, time: "7:45", Remaining: 5 },
@@ -79,7 +78,7 @@ const SingleEventAlalytics = () => {
     },
   ];
 
-  if(loader){
+  if (loader) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <Spinner className="w-12 h-12" />
@@ -99,7 +98,7 @@ const SingleEventAlalytics = () => {
       >
         <h2
           style={{
-            color: "#636263",
+            color: "#098d99;",
             marginLeft: "10px",
             fontSize: "1.5rem",
             fontWeight: "bold",
@@ -109,7 +108,7 @@ const SingleEventAlalytics = () => {
           Event : {eventData && eventData.title}
         </h2>
         <StatsContainer defaultStats={defaultStats} eventId={eventId} />
-        <SingleEventDesc eventId={eventId}/>
+        <SingleEventDesc eventId={eventId} />
         <ChartsContainerForSingleEvent data={data} />
       </div>
     </>

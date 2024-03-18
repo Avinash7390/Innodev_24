@@ -2,6 +2,7 @@ import StatItem from "./StatItem";
 import StatsContainerWrapper from "../functionalcomponents/StatsContainer";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { Spinner } from "flowbite-react";
 
 const StatsContainer = ({ defaultStats, eventId }) => {
   const [loader, setLoader] = useState(true);
@@ -44,7 +45,12 @@ const StatsContainer = ({ defaultStats, eventId }) => {
   defaultStats[2].count = totalAmount;
 
   defaultStats[3].count = averageTicketPrice;
-
+  if (loader)
+  return (
+    <div className='flex justify-center items-center min-h-screen'>
+      <Spinner size='xl' />
+    </div>
+  );
 
   return (
     <StatsContainerWrapper>

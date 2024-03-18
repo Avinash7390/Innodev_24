@@ -24,7 +24,7 @@ const SingleEventDescChildWrapper = styled.article`
     text-align: left;
     margin-top: 0.5rem;
     margin-bottom: 1rem;
-    color: #494d52;
+    color: #098d99;
     font-weight: bold;
     font-size: 1.5rem;
   }
@@ -50,6 +50,7 @@ const SingleEventDescChildWrapper = styled.article`
     font-family: verdana;
     font-weight: bold;
     margin-right: 10px;
+    color: #098d99;
   }
   .attendees {
     text-decoration: none;
@@ -67,11 +68,13 @@ const SingleEventDescChildWrapper = styled.article`
   .Desc {
     margin-top: 10px;
     margin-bottom: 10px;
+    color: #098d99;
   }
   .venue {
     font-weight: bold;
     margin-top: 10px;
     margin-bottom: 10px;
+    color: #098d99;
   }
 `;
 
