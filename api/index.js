@@ -8,6 +8,7 @@ import path from "path";
 import eventRoutes from "./routes/event.route.js";
 
 import registerAndMakePayment from "./routes/registerAndPaymentRoute.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js"
 
 dotenv.config();
 mongoose
@@ -29,6 +30,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/event", eventRoutes);
 
 app.use("/api/payment", registerAndMakePayment);
+app.use("/api/analytics", analyticsRoutes)
 app.use((err, req, res, next) => {
   //middleware for handling errors
   const statusCode = err.statusCode || 500;

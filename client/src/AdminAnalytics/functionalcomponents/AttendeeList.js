@@ -33,7 +33,7 @@ const AttendeeList = styled.section`
 
   .list-header span {
     display: inline-block;
-    width: calc(100% / 5);
+    width: calc(100% / 4);
     padding: 10px 0;
     text-align: center;
   }

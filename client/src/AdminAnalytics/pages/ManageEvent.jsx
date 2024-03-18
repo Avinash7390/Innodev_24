@@ -1,7 +1,8 @@
 import React from "react";
 import ManageEventCompo from "../functionalcomponents/ManageEventCSS";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 const ManageEvent = () => {
+  const {eventId} = useParams();
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -9,7 +10,7 @@ const ManageEvent = () => {
   };
 
   const handleClick = () => {
-    navigate("/single-event-analytics");
+    navigate(`/single-event-analytics/${eventId}`);
   };
   return (
     <ManageEventCompo>
