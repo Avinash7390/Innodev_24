@@ -25,7 +25,7 @@ export default function Home() {
         Start exploring events or create your own today!
       </p>
      <div className='flex justify-center flex-col gap-4'>
-     <img className="hover:opacity-55 transition-all duration-1000 w-full h-96 object-cover rounded-lg mt-6"
+     <img className="hover:opacity-55 transition-all duration-2000 w-full h-96 object-cover rounded-lg mt-6"
   src={Homebg}
   alt="home_bg"
   
