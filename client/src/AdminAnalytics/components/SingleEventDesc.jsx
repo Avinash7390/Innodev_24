@@ -46,7 +46,7 @@ const SingleEventDesc = ({eventId }) => {
           <span className="date">Date : {eventData && eventData.date}</span>
           <span className="time">Time : {eventData && eventData.time}</span>
           <h3 className="venue">Venue: {eventData && eventData.location}</h3>
-          <h5 className="Desc">Description: {eventData && eventData.content}</h5>
+          <h5 className="Desc">Description :<div dangerouslySetInnerHTML={{ __html: eventData && eventData.content }}></div></h5>
 
           <NavLink to={`/event-attendees/${eventId}`} className={"attendees"}>
             <span>View Attendees List</span>

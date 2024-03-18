@@ -21,11 +21,12 @@ import AttendeesList from "./AdminAnalytics/components/AttendeesList";
 import PaymentFailed from "./components/PaymentFailed";
 import PaymentSuccess from "./components/PaymentSuccess";
 import Search from "./pages/Search";
-
+import ScrollToTop from "./components/ScrollToTop";
 const App = () => {
   return (
     <>
       <BrowserRouter>
+      <ScrollToTop />
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />

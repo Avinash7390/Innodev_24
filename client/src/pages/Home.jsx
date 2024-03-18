@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'flowbite-react';
-import Homebg from "../../public/home_bg.jpg";
+import Homebg from "/home_bg.jpg";
 import { MdStarBorderPurple500 } from 'react-icons/md';
 import { motion } from 'framer-motion';
 export default function Home() {

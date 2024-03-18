@@ -8,8 +8,7 @@ import { ImLocation } from "react-icons/im";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { MdOutlineAccessTimeFilled } from "react-icons/md";
 import { TiCamera } from "react-icons/ti";
-import { FaTicketAlt } from "react-icons/fa";
-import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { Spinner } from 'flowbite-react';
@@ -64,6 +63,8 @@ return (
 );
 const handleShowMore=async()=>{
   const startIndex=userEvents.length;
+  setLoading(true);
+
   try{
     const res=await fetch(`api/event/getEvents?userid=${currentUser._id}&startIndex=${startIndex}`);
     const data=await res.json();
@@ -74,6 +75,8 @@ const handleShowMore=async()=>{
         setShowMore(false);
 
       }
+
+      setLoading(false);
     }
   } catch(error)
   {

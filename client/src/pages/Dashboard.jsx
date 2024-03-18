@@ -4,6 +4,9 @@ import { useState } from "react";
 import DashSidebar from "../components/DashSidebar";
 import DashProfile from "../components/DashProfile";
 import DashEvents from "../components/DashEvents";
+
+import DashUsers from "../components/DashUsers";
+
 import { motion } from 'framer-motion';
 
 const Dashboard = () => {
@@ -22,11 +25,15 @@ const Dashboard = () => {
     initial={{ opacity: 0 }}
   animate={{ opacity: 1 }}
   transition={{ duration: 1 }}>
+
       <div className="md:w-56">
         <DashSidebar />
       </div>
+
       {tab === "profile" && <DashProfile />}
      {tab==="events" &&<DashEvents/>}
+     {tab === 'users' && <DashUsers />}
+
     </motion.div>
   );
 };

@@ -195,8 +195,9 @@ const handleSubmit=async(e)=>{
 
 
     if(res.ok){
+      console.log(formData);
       setPublishError(null);
-      console.log(formData);  
+ 
       navigate(`/event/${data.slug}`);
     }
 
@@ -239,10 +240,7 @@ const validateDate = (date) => {
   return null;
 };
 
-function convertTo12Hour(time) {
-  const [hours, minutes] = time.split(':');
-  return ((hours % 12) || 12) + ':' + minutes + (hours < 12 ? ' AM' : ' PM');
-}
+
 
 
 if (loading)

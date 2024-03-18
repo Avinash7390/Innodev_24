@@ -2,19 +2,32 @@ import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
-import { z } from "zod";
+import { z } from 'zod';
 
 export const signup = async (req, res, next) => {
-  const emailSchema = z.string().email().refine(email => email.endsWith('@gmail.com') || email.endsWith('@mnnit.ac.in'), {
-    message: 'Email must end with @gmail.com or @mnnit.ac.in',
-  });
+  const emailSchema = z.string().email().refine(email => email.endsWith('@gmail.com') || email.endsWith('@mnnit.ac.in'));
+
+  const usernameSchema = z.string().min(1).max(20).refine(username => /^[a-zA-Z0-9]+$/.test(username));
+
+  const passwordSchema = z.string().min(6).max(100);
+
   const { username, email, password } = req.body;
 
-  const { success, error } = emailSchema.safeParse(email);
-  if (!success) {
-    return next(errorHandler(400, "Invalid email input"));
+  const { success: emailSuccess, error: emailError } = emailSchema.safeParse(email);
+  if (!emailSuccess) {
+    return next(errorHandler(400, "Invalid Email , It should end with @gmail.com or @mnnit.ac.in"));
   }
-  
+
+  const { success: usernameSuccess, error: usernameError } = usernameSchema.safeParse(username);
+  if (!usernameSuccess) {
+    return next(errorHandler(400, "Invalid Username , It should contain only alphanumeric characters"));
+  }
+
+  const { success: passwordSuccess, error: passwordError } = passwordSchema.safeParse(password);
+  if (!passwordSuccess) {
+    return next(errorHandler(400, "Invalid Password , It should contain atleast 6 characters"));
+  }
+
   try {
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
@@ -102,6 +115,4 @@ export const google = async (req, res, next) => {
   }
 };
 
-export const signout = (req, res) => {
-  res.clearCookie("access_token").status(200).json("Signout success !");
-};
+
