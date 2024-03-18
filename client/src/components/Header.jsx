@@ -30,6 +30,10 @@ if(searchTermFromUrl)
 {
   setSearchTerm(searchTermFromUrl);
 }
+else{
+  setSearchTerm('');
+
+}
 },[location.search]);
 
 

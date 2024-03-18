@@ -2,9 +2,13 @@ import { Button, Select, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import EventCard from '../components/EventCard';
-import { date } from 'zod';
+import { motion } from 'framer-motion';
 
 export default function Search() {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
+
   const [sidebarData, setSidebarData] = useState({
     searchTerm: '',
     sort: 'desc',
@@ -92,7 +96,7 @@ export default function Search() {
 
   const handleSubmit = (e) => {
     console.log(sidebarData.location);
-    const dateToSend = convertDateToNormalFormat(sidebarData.date);
+   
 
     e.preventDefault();
     const urlParams = new URLSearchParams(location.search);
@@ -149,6 +153,7 @@ const handleRemoveFilters=()=>{
         date: '',
         time: '',
       });
+      navigate(location.pathname);
 
 
 
@@ -159,7 +164,10 @@ const handleRemoveFilters=()=>{
 
 
   return (
-    <div className='flex flex-col md:flex-row'>
+    <motion.div className='flex flex-col md:flex-row transition-all duration-1000' 
+    initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}>
       <div className='p-7 border-b md:border-r md:min-h-screen border-gray-500'>
         <form className='flex flex-col gap-8' onSubmit={handleSubmit}>
           <div className='flex self-center   items-center gap-2'>
@@ -238,6 +246,6 @@ const handleRemoveFilters=()=>{
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

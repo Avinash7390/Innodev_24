@@ -12,7 +12,9 @@ const Events = () => {
   const [userEvents,setUserEvents]=useState([]);
 
   
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
 
   useEffect(() => {
@@ -105,9 +107,14 @@ const Events = () => {
    <button onClick={handleShowMore} className='w-full text-teal-500 self-center text-sm py-7'>Show more</button>
     )
   }
-  <div className='flex flex-col  mx-auto'><p className='text-slate-300 mx-auto '>Confused ? We have advanced search filters to help you attend Events aligned with your Schedules .</p>  <Link to="/search" ><Button className='ml-4 mt-8 mb-16 self-center mx-auto'  gradientDuoTone="pinkToOrange" outline>
-            Try Now
-          </Button></Link></div>
+  <div className='mx-auto flex flex-col items-center justify-center'>
+  <p className='text-slate-300 font-semibold'>Confused ? We have advanced search filters to help you attend Events aligned with your Schedules .</p>
+  <Link className='' to="/search">
+    <Button className='mt-8 mb-16' gradientDuoTone="pinkToOrange" outline>
+      Try Now
+    </Button>
+  </Link>
+</div>
   
  
 </>
