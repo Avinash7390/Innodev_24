@@ -9,7 +9,7 @@ import { loadStripe } from "@stripe/stripe-js/pure";
 import axios from "axios";
 import { setConfirmedTickets,setFinalPrice } from "../redux/ticket/ticketSlice";
 import { FaIndianRupeeSign } from "react-icons/fa6";
-
+import { motion } from 'framer-motion';
 const EventPage = () => {
   const { eventSlug } = useParams();
   const [loading, setLoading] = useState(true);
@@ -147,7 +147,10 @@ console.log(selectedTickets);
 
   return (
     <div className="bg-blue-900 bg-opacity-20">
-    <main className="  p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
+    <motion.main className=" transition-all duration-1000 p-3 flex flex-col max-w-6xl mx-auto min-h-screen"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 1 }}>
       <h1 className="text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl hover:opacity-70 transiton duration-0.1 cursor-pointer">
         {event && event.title}
       </h1>
@@ -215,7 +218,15 @@ console.log(selectedTickets);
 
 
       </div>
-      {currentUser.isAdmin?"":(<div className="flex text-3xl">Total Bill :<div className="flex"><FaIndianRupeeSign size={25} className="mt-[8px] mr-[2px] ml-[10px]" /><div className="mt-[0.5px] transition-all duration-100">{totalPrice}</div></div> </div>)}
+      {currentUser && !currentUser.isAdmin && (
+  <div className="flex text-3xl">
+    Total Bill :
+    <div className="flex">
+      <FaIndianRupeeSign size={25} className="mt-[8px] mr-[2px] ml-[10px]" />
+      <div className="mt-[0.5px] transition-all duration-100">{totalPrice}</div>
+    </div>
+  </div>
+)}
       
       <div className="self-center mt-12">
         {currentUser === null ? (
@@ -238,7 +249,7 @@ console.log(selectedTickets);
           </div>
         )}
       </div>
-    </main>
+    </motion.main>
     </div>
   );
 };

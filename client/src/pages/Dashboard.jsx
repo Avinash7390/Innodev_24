@@ -4,6 +4,7 @@ import { useState } from "react";
 import DashSidebar from "../components/DashSidebar";
 import DashProfile from "../components/DashProfile";
 import DashEvents from "../components/DashEvents";
+import { motion } from 'framer-motion';
 
 const Dashboard = () => {
   const location = useLocation();
@@ -17,13 +18,16 @@ const Dashboard = () => {
   }, [location.search]);
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <motion.div className="transition-all duration-1000  min-h-screen flex flex-col md:flex-row"
+    initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}>
       <div className="md:w-56">
         <DashSidebar />
       </div>
       {tab === "profile" && <DashProfile />}
      {tab==="events" &&<DashEvents/>}
-    </div>
+    </motion.div>
   );
 };
 

@@ -137,7 +137,7 @@ const handleSubmit=async(e)=>{
   
     const data=await res.json();
     
-   if(!res.ok){
+   if(!res.ok) {
     setPublishError(data.message);
     console.log(data.message);
     return;
@@ -174,7 +174,7 @@ const validateLocation = (location) => {
 const validateDate = (date) => {
   
 
-  // Check if date is not in the future
+  
   const selectedDate = new Date(date);
   
   if (!date) {

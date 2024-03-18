@@ -22,6 +22,9 @@ import {
 } from "../redux/user/userSlice";
 import { Button ,Modal, ModalBody } from "flowbite-react";
 import { Link } from "react-router-dom";
+import { motion } from 'framer-motion';
+
+
 
 const DashProfile = () => {
   const fileRef = useRef(null);
@@ -110,7 +113,10 @@ const DashProfile = () => {
     }
   };
   return (
-    <div className="p-4 max-w-lg mx-auto w-full">
+    <motion.div className="transition-all duration-1000  p-4 max-w-lg mx-auto w-full" 
+    initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}>
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -219,7 +225,7 @@ const DashProfile = () => {
           </div>
         </Modal.Body>
       </Modal>
-    </div>
+    </motion.div>
     
   );
 };
