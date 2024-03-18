@@ -11,15 +11,18 @@ const stripe = new Stripe(
 import { errorHandler } from "../utils/error.js";
 
 const registerAndMakePaymentController = async (req, res, next) => {
-  const { eventId, userId } = req.body;
+  const { eventId, userId, amount } = req.body;
   if (!eventId) {
     return next(errorHandler(400, "Please Provide eventId"));
   }
   if (!userId) {
     return next(errorHandler(400, "Please Provide UserId"));
   }
+  if(!amount){
+    return next(errorHandler(400, "Please Select Ticket"));
+  }
   const event = await Event.findById(eventId);
-  const price = 100;
+  const price = amount;
   const qt = 1;
   const lineItem = [
     {
@@ -37,7 +40,7 @@ const registerAndMakePaymentController = async (req, res, next) => {
   const session = await stripe.checkout.sessions.create({
     line_items: lineItem,
     mode: "payment",
-    success_url: `http://localhost:5173/payment-success/${event._id}/${userId}`,
+    success_url: `http://localhost:5173/payment-success/${event._id}/${userId}/${amount}`,
     cancel_url: `http://localhost:5173/paymentCancel/${event._id}${userId}`,
   });
 
@@ -48,12 +51,16 @@ const registerAndMakePaymentController = async (req, res, next) => {
 };
 
 const registerForEventController = async (req, res, next) => {
-  const { eventId, userId } = req.body;
+  const { eventId, userId , amount} = req.body;
   if (!eventId) {
     return next(errorHandler(400, "Please Provide eventId"));
   }
   if (!userId) {
     return next(errorHandler(400, "Please Provide UserId"));
+  }
+
+  if(!amount){
+    return next(errorHandler(400, "Please Select An Amount"));
   }
 
   const prevUser = await Register.findOne({ eventId, userId });
@@ -67,6 +74,7 @@ const registerForEventController = async (req, res, next) => {
   const registeredUser = await Register.create({
     eventId,
     userId,
+    amount
   });
 
   res.status(200).json({

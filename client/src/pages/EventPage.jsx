@@ -94,7 +94,7 @@ console.log(selectedTickets);
           setLoading(false);
           setError(false);
 
-          // console.log(currentUser._id);
+
         }
       } catch (error) {
         console.log(error.message);
@@ -104,6 +104,7 @@ console.log(selectedTickets);
     };
     fetchEvent();
   }, [eventSlug]);
+  console.log(event)
 
   if (loading)
     return (
@@ -112,7 +113,7 @@ console.log(selectedTickets);
       </div>
     );
   const handleManageClick = () => {
-    navigate("/manage-event");
+    navigate(`/manage-event/${event._id}`);
   };
 
   const handlePayment = async () => {
@@ -128,13 +129,13 @@ console.log(selectedTickets);
 
     if (prevUser?.data?.ok) {
       
-      navigate(`/payment-success/${event?._id}/${currentUser?._id}`);
+      navigate(`/payment-success/${event?._id}/${currentUser?._id}/${totalPrice}`);
       return;
     }
 
     const response = await axios.post(
       "/api/payment/register-and-make-payment-session",
-      { eventId: event?._id, userId: currentUser?._id }
+      { eventId: event?._id, userId: currentUser?._id, amount:totalPrice}
     );
     // console.log(response);
     if (!prevUser?.data?.ok) {

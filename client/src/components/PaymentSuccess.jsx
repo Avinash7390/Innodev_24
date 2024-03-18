@@ -7,13 +7,14 @@ import axios from "axios";
 const PaymentSuccess = () => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(null);
-  const { eventId, userId } = useParams();
+  const { eventId, userId, amount } = useParams();
   // console.log(eventId, userId);
 
   const registerUser = async () => {
     const res = await axios.post("/api/payment/register-new-user", {
       eventId,
       userId,
+      amount
     });
     if (res?.data?.ok) {
       setLoading(false);

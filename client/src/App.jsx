@@ -42,19 +42,19 @@ const App = () => {
           <Route element={<OnlyAdminPrivateRoute />}>
             <Route path="/create" element={<CreateEvent />} />
             <Route path="/update/:eventId" element={<UpdateEvent />} />
-            <Route path="/manage-event" element={<ManageEvent />} />
+            <Route path="/manage-event/:eventId" element={<ManageEvent />} />
           <Route
-            path="/single-event-analytics"
+            path="/single-event-analytics/:eventId"
             element={<SingleEventAnalytics />}
           />
             <Route path="/all-event-analytics" element={<AllEventAnalytics />} />
-            <Route path="/event-attendees" element={<AttendeesList />} />
+            <Route path="/event-attendees/:eventId" element={<AttendeesList />} />
           </Route>
 
           <Route path="/event/:eventSlug" element={<EventPage />} />
           
           <Route
-            path="/payment-success/:eventId/:userId"
+            path="/payment-success/:eventId/:userId/:amount"
             element={<PaymentSuccess />}
           />
           <Route

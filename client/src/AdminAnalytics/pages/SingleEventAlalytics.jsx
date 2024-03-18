@@ -1,17 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StatsContainer from "../components/StatsContainer";
 import ChartsContainerForSingleEvent from "../components/ChartContainerForSingleEvent";
 import SingleEventDesc from "../components/SingleEventDesc";
 import { IoTicketOutline } from "react-icons/io5";
 import { FaMoneyCheckAlt, FaUserCheck } from "react-icons/fa";
 import { GiPlayerNext } from "react-icons/gi";
+import { Spinner, Button } from "flowbite-react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const SingleEventAlalytics = () => {
+  const {eventId} = useParams();
+  const [loader, setLoader] = useState(true);
+  const [eventData, setEventData] = useState(null);
+
+  useEffect(() => {
+
+    const getUserData = async () => {
+      try{
+        setLoader(true);
+        const response = await axios.get(`/api/analytics/event-data/${eventId}`)
+        if(response?.data?.ok){
+          setLoader(false);
+          setEventData(response?.data?.singleEvent[0]);
+        }else{
+          setLoader(true);
+        }
+      }catch(err){
+
+        console.log(err);
+      }
+    }
+    getUserData();
+  }, [])
+
+
   const data = [
-    { CheckedIn: 2, time: "7:45", Remaining: 40 },
-    { CheckedIn: 10, time: "8:30", Remaining: 32 },
-    { CheckedIn: 6, time: "8:00", Remaining: 36 },
-    { CheckedIn: 30, time: "10:10", Remaining: 12 },
+    { CheckedIn: 1, time: "7:45", Remaining: 5 },
+    { CheckedIn: 2, time: "8:30", Remaining: 4 },
+    { CheckedIn: 3, time: "8:00", Remaining: 3 },
   ];
   const eventDesc = {
     title: "Cricket Mania",
@@ -24,21 +51,21 @@ const SingleEventAlalytics = () => {
   const defaultStats = [
     {
       title: "Total Participants",
-      count: 100 || 0,
+      count: 6 || 0,
       icon: <GiPlayerNext />,
       color: "#2a99a3",
       bcg: "#c5ecf0",
     },
     {
       title: "Checked-In",
-      count: 50 || 0,
+      count: 2 || 0,
       icon: <FaUserCheck />,
       color: "#647acb",
       bcg: "#e0e8f9",
     },
     {
       title: "Total Revenue",
-      count: 4000 || 0,
+      count: 1200 || 0,
       icon: <FaMoneyCheckAlt />,
       color: "#1f875f",
       bcg: "#cce6d5",
@@ -51,6 +78,14 @@ const SingleEventAlalytics = () => {
       bcg: "#ffeeee",
     },
   ];
+
+  if(loader){
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner className="w-12 h-12" />
+      </div>
+    );
+  }
   return (
     <>
       <div
@@ -71,10 +106,10 @@ const SingleEventAlalytics = () => {
             marginBottom: "10px",
           }}
         >
-          Event Name Stats
+          Event : {eventData && eventData.title}
         </h2>
-        <StatsContainer defaultStats={defaultStats} />
-        <SingleEventDesc data={eventDesc} />
+        <StatsContainer defaultStats={defaultStats} eventId={eventId} />
+        <SingleEventDesc eventId={eventId}/>
         <ChartsContainerForSingleEvent data={data} />
       </div>
     </>
