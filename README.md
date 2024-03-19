@@ -8,7 +8,7 @@ A Web Application which we completed during the Innodev'24
 
  - User Profile page for Admin and Users and their updation.
 
- - Admin can create new event by providing details of event name , date , time , location , ticket types and description .
+ - Admin can create new event by providing details of event name , date , time , location , ticket types and description and also delete events.
 
  - Users can register on a particular event by selecting ticket types and a secure payment portal for event registration .
 
@@ -16,17 +16,24 @@ A Web Application which we completed during the Innodev'24
 
  - A Calendar view of upcoming events .
 
- 
 
+ 
  - Admin can keep track of the event attendance (check-in system), ticket sales and also revenue .
 
  - Admin Dashboard where he can manage the attendee list , track registration and look after ticket sales.
 
+ - Admin can promote the events by creating sharable event links in the description of a particular event.
+
+ - Search feature in the application .
+
+ - Dark mode feature .
+
 ⭐Technologies Used : 
 
- - Front-End : JavaScript , ReactJS , CSS , Tailwind CSS 
+ - Front-End : JavaScript , ReactJS , CSS , Tailwind CSS , Flowbite CSS
  - Back-End :ExpressJS , NodeJs
- - Database :MongoDB ,
+ - Database :MongoDB , Firebase
+ - State-Management : Redux toolkit
  - Developer tools : npm , git
 
 
