@@ -47,4 +47,20 @@ const markAttendance = async (req, res, next) => {
   }
 };
 
-export { markAttendance };
+const getAllattendees = async (req, res, next) => {
+  const { eventId } = req.params;
+
+  if (!eventId) {
+    return res.status(400).json({
+      ok: false,
+      message: "Please Provide eventId",
+    });
+  }
+
+  const users = await AttendanceModel.find({ eventId });
+  res.status(200).json({
+    ok: true,
+    users,
+  });
+};
+export { markAttendance, getAllattendees };
