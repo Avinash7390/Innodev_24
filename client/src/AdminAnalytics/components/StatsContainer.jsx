@@ -7,26 +7,33 @@ import { Spinner } from "flowbite-react";
 const StatsContainer = ({ defaultStats, eventId }) => {
   const [loader, setLoader] = useState(true);
   const [eventData, setEventData] = useState(null);
+  const [len, setLen] = useState(0);
 
   useEffect(() => {
-
     const getUserData = async () => {
-      try{
+      try {
         setLoader(true);
-        const response = await axios.get(`/api/analytics/event-data/${eventId}`)
-        if(response?.data?.ok){
+        const response = await axios.get(
+          `/api/analytics/event-data/${eventId}`
+        );
+        const allUsers = await axios.get(
+          `/api/attendance/get-all-attendees/${eventId}`
+        );
+        if (allUsers?.data?.ok) {
+          setLen(allUsers?.data?.users?.length);
+        }
+        if (response?.data?.ok) {
           setLoader(false);
           setEventData(response?.data);
-        }else{
+        } else {
           setLoader(true);
         }
-      }catch(err){
-
+      } catch (err) {
         console.log(err);
       }
-    }
+    };
     getUserData();
-  }, [])
+  }, []);
 
   console.log(eventData);
   let totalAmount = 0;
@@ -34,23 +41,23 @@ const StatsContainer = ({ defaultStats, eventId }) => {
 
   eventData?.eventData?.map((data) => {
     totalAmount += data.amount;
-  })
+  });
 
   let averageTicketPrice = 0;
-  if(totalParticipants >= 1){
-    averageTicketPrice = totalAmount/ totalParticipants;
+  if (totalParticipants >= 1) {
+    averageTicketPrice = totalAmount / totalParticipants;
   }
   defaultStats[0].count = totalParticipants;
-  defaultStats[1].count = totalParticipants;
+  defaultStats[1].count = len;
   defaultStats[2].count = totalAmount;
 
   defaultStats[3].count = averageTicketPrice;
   if (loader)
-  return (
-    <div className='flex justify-center items-center min-h-screen'>
-      <Spinner size='xl' />
-    </div>
-  );
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner size="xl" />
+      </div>
+    );
 
   return (
     <StatsContainerWrapper>
