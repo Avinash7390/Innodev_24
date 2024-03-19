@@ -20,9 +20,7 @@ export default function SignIn() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
   useEffect(() => {
     dispatch(signInFailure(null));
@@ -36,32 +34,36 @@ if(!formData.email || !formData.password)
   return dispatch(signInFailure('Please fill all the fields'));
 }
 
-    try {
-      dispatch(signInStart());
-      const res = await fetch("/api/auth/sign-in", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
+try {
+  dispatch(signInStart());
+  const res = await fetch("/api/auth/sign-in", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  });
+  const data = await res.json();
 
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
-        return;
-      }
+  if (data.success === false) {
+    dispatch(signInFailure(data.message));
+    return;
+  }
 
-      if(res.ok)
-      {
-        dispatch(signInSuccess(data));
-        navigate("/");
-      }
-      
-    } catch (error) {
-      dispatch(signInFailure(error.message));
-    }
-  };
+  if(res.ok)
+  {
+    dispatch(signInSuccess(data));
+    navigate("/");
+  }
+  
+} catch (error) {
+  if (error.message === "Unexpected end of JSON input") {
+    dispatch(signInFailure("An error occurred while signing in. Please try again later."));
+  } else {
+    dispatch(signInFailure(error.message));
+  }
+}
+};
   return (
     <motion.div className="transition-all duration-1000 min-h-screen mt-20"
     initial={{ opacity: 0 }}

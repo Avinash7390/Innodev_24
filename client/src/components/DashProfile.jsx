@@ -20,7 +20,7 @@ import {
   deleteUserSuccess,
   signoutSuccess,
 } from "../redux/user/userSlice";
-import { Button ,Modal, ModalBody } from "flowbite-react";
+import { Button ,Modal} from "flowbite-react";
 import { Link } from "react-router-dom";
 import { motion } from 'framer-motion';
 
@@ -36,6 +36,15 @@ const DashProfile = () => {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
+  const [initialData, setInitialData] = useState({
+    username: currentUser.username,
+    email: currentUser.email,
+  });
+  const [isDisabled, setIsDisabled] = useState(true);
+
+
+  
+
   useEffect(() => {
     if (image) {
       handleFileUpload(image);
@@ -64,9 +73,14 @@ const DashProfile = () => {
     );
   };
   const handleChange = (e) => {
+    if (e.target.id === 'password' && e.target.value.trim() === '') {
+      return;
+    }
     setFormData({ ...formData, [e.target.id]: e.target.value });
+    setIsDisabled(formData.username === initialData.username && formData.email === initialData.email);
   };
   const handleSubmit = async (e) => {
+    setIsDisabled(true);
     e.preventDefault();
     try {
       dispatch(updateUserStart());
@@ -153,6 +167,7 @@ const DashProfile = () => {
           placeholder="Username"
           className="bg-slate-100 dark:bg-slate-300 dark:text-slate-700 rounded-lg p-3"
           onChange={handleChange}
+          
         />
         <input
           defaultValue={currentUser.email}
@@ -161,19 +176,23 @@ const DashProfile = () => {
           placeholder="Email"
           className="bg-slate-100 dark:bg-slate-300 dark:text-slate-700 rounded-lg p-3"
           onChange={handleChange}
+          required
         />
         <input
+        defaultValue={currentUser.password}
           type="password"
           id="password"
           placeholder="Password"
           className="bg-slate-100  dark:bg-slate-300 dark:text-slate-700 rounded-lg p-3"
           onChange={handleChange}
+          
         />
         <Button
           className="p-1 uppercase"
           type="submit"
           gradientDuoTone="purpleToBlue"
           outline
+          disabled={isDisabled}
         >
           {loading ? "loading..." : "update"}
         </Button>

@@ -62,8 +62,12 @@ export const getEvents=async(req,res,next)=>{
             {
             ...(req.query.userId&&{userId:req.query.userId}),
          
-         ...(req.query.date&&{date:req.query.date}),
-         ...(req.query.time&&{time:req.query.time}),
+            ...(req.query.date&&{
+                date:{$regex:req.query.date,$options:'i'}
+              }),
+              ...(req.query.time&&{
+                time:{$regex:req.query.time,$options:'i'}
+              }),
          
         ...(req.query.slug&&{slug:req.query.slug}),
         ...(req.query.eventId&&{_id:req.query.eventId}),
