@@ -1,7 +1,11 @@
 import express from "express";
 
-import { markAttendance } from "../controllers/attendanceController.js";
+import {
+  getAllattendees,
+  markAttendance,
+} from "../controllers/attendanceController.js";
 const router = express.Router();
 
-router.post("/mark-attendance", markAttendance)
+router.post("/mark-attendance", markAttendance);
+router.get("/get-all-attendees/:eventId", getAllattendees);
 export default router;

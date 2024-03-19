@@ -5,38 +5,37 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { Spinner } from "flowbite-react";
 
-const SingleEventDesc = ({eventId }) => {
+const SingleEventDesc = ({ eventId }) => {
   const [loader, setLoader] = useState(true);
   const [eventData, setEventData] = useState(null);
 
   useEffect(() => {
-
     const getUserData = async () => {
-      try{
+      try {
         setLoader(true);
-        const response = await axios.get(`/api/analytics/event-data/${eventId}`)
-        if(response?.data?.ok){
+        const response = await axios.get(
+          `/api/analytics/event-data/${eventId}`
+        );
+        if (response?.data?.ok) {
           setLoader(false);
           setEventData(response?.data?.singleEvent[0]);
-        }else{
+        } else {
           setLoader(true);
         }
-      }catch(err){
-
+      } catch (err) {
         console.log(err);
       }
-    }
+    };
     getUserData();
-  }, [])
+  }, []);
 
   // console.log(eventData);
   if (loader)
-  return (
-    <div className='flex justify-center items-center min-h-screen'>
-      <Spinner size='xl' />
-    </div>
-  );
-
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner size="xl" />
+      </div>
+    );
 
   return (
     <>
@@ -46,7 +45,14 @@ const SingleEventDesc = ({eventId }) => {
           <span className="date">Date : {eventData && eventData.date}</span>
           <span className="time">Time : {eventData && eventData.time}</span>
           <h3 className="venue">Venue: {eventData && eventData.location}</h3>
-          <h5 className="Desc">Description :<div dangerouslySetInnerHTML={{ __html: eventData && eventData.content }}></div></h5>
+          <h5 className="Desc">
+            Description :
+            <div
+              dangerouslySetInnerHTML={{
+                __html: eventData && eventData.content,
+              }}
+            ></div>
+          </h5>
 
           <NavLink to={`/event-attendees/${eventId}`} className={"attendees"}>
             <span>View Attendees List</span>
