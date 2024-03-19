@@ -21,6 +21,7 @@ import AttendeesList from "./AdminAnalytics/components/AttendeesList";
 import PaymentFailed from "./components/PaymentFailed";
 import PaymentSuccess from "./components/PaymentSuccess";
 import Search from "./pages/Search";
+import Team from "./pages/Team";
 
 const App = () => {
   return (
@@ -33,7 +34,6 @@ const App = () => {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/search" element={<Search />} />
-         
 
           <Route path="/AllEvents" element={<Events />} />
           <Route element={<PrivateRoute />}>
@@ -43,16 +43,22 @@ const App = () => {
             <Route path="/create" element={<CreateEvent />} />
             <Route path="/update/:eventId" element={<UpdateEvent />} />
             <Route path="/manage-event/:eventId" element={<ManageEvent />} />
-          <Route
-            path="/single-event-analytics/:eventId"
-            element={<SingleEventAnalytics />}
-          />
-            <Route path="/all-event-analytics" element={<AllEventAnalytics />} />
-            <Route path="/event-attendees/:eventId" element={<AttendeesList />} />
+            <Route
+              path="/single-event-analytics/:eventId"
+              element={<SingleEventAnalytics />}
+            />
+            <Route
+              path="/all-event-analytics"
+              element={<AllEventAnalytics />}
+            />
+            <Route
+              path="/event-attendees/:eventId"
+              element={<AttendeesList />}
+            />
           </Route>
 
           <Route path="/event/:eventSlug" element={<EventPage />} />
-          
+
           <Route
             path="/payment-success/:eventId/:userId/:amount"
             element={<PaymentSuccess />}
@@ -61,6 +67,7 @@ const App = () => {
             path="/payment-failed/:eventId/:userId"
             element={<PaymentFailed />}
           />
+          <Route path="/team" element={<Team />} />
         </Routes>
         <FooterComp />
       </BrowserRouter>
