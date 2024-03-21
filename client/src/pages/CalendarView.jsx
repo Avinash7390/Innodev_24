@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import EventCard from '../components/EventCard';
 import Select from 'react-select';
-import CalendarViewBg from "/CalendarView.jpg"
+
 import { set } from 'mongoose';
 const monthOptions = [
     { value: '1', label: 'January' },

@@ -3,7 +3,7 @@ import StatsContainerWrapper from "../functionalcomponents/StatsContainer";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Spinner } from "flowbite-react";
-
+import { motion } from 'framer-motion';
 const StatsContainer = ({ defaultStats, eventId }) => {
   const [loader, setLoader] = useState(true);
   const [eventData, setEventData] = useState(null);
@@ -60,11 +60,16 @@ const StatsContainer = ({ defaultStats, eventId }) => {
     );
 
   return (
+    <motion.div
+    initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}>
     <StatsContainerWrapper>
       {defaultStats.map((item, index) => {
         return <StatItem key={index} {...item} />;
       })}
     </StatsContainerWrapper>
+    </motion.div>
   );
 };
 

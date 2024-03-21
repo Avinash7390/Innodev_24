@@ -5,9 +5,7 @@ import EventCard from '../components/EventCard';
 import { motion } from 'framer-motion';
 
 export default function Search() {
-    useEffect(() => {
-        window.scrollTo(0, 0);
-      }, []);
+    
 
   const [sidebarData, setSidebarData] = useState({
     searchTerm: '',

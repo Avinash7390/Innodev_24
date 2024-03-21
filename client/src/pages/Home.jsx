@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'flowbite-react';
 import Homebg from "/home_bg.jpg";
-import { MdStarBorderPurple500 } from 'react-icons/md';
+import calendarbg from "/CalendarView.jpg";
 import { motion } from 'framer-motion';
 export default function Home() {
-  const {currentUser}=useSelector((state)=>state.user);
+  
   return (
     <motion.div className="transition-all duration-1000 p-4"
     initial={{ opacity: 0 }}
@@ -24,16 +24,21 @@ export default function Home() {
       <p className="text-lg">
         Start exploring events or create your own today!
       </p>
-     <div className='flex justify-center flex-col gap-4'>
-     <img className="hover:opacity-55 transition-all duration-2000 w-full h-96 object-cover rounded-lg mt-6"
-  src={Homebg}
-  alt="home_bg"
-  
-/>
-      <Link className=' self-center' to='/AllEvents'><Button  gradientDuoTone="purpleToBlue" outline>
+      <div className='flex flex-col gap-4'>
+        <div className='flex justify-center '>
+        <img  src={Homebg} alt="home_bg" className="hover:scale-95  transition-all duration-300 w-full h-96 object-cover rounded-lg mt-6" />
+        <Link className='absolute self-center' to='/AllEvents'><Button className='hover:scale-150 transition-all duration-300'  gradientDuoTone="purpleToBlue" outline>
             View Events
           </Button></Link>
+        </div>
+        <div className='flex justify-center '>
+        <img  src={calendarbg} alt=" Calendar View" className="hover:scale-95  transition-all duration-300 w-full h-96 object-cover rounded-lg mt-6" />
+        <Link className='absolute self-center' to='/CalendarView'><Button className='hover:scale-150 transition-all duration-300'  gradientDuoTone="greenToBlue" outline>
+        Calendar View
+          </Button></Link>
+        </div>
       </div>
+    
     </motion.div>
   );
 }

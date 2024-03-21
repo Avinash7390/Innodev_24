@@ -25,6 +25,10 @@ import Search from "./pages/Search";
 import Team from "./pages/Team";
 import ScrollToTop from "./components/ScrollToTop";
 
+import CalendarView from "./pages/CalendarView";
+
+
+
 const App = () => {
   return (
     <>
@@ -39,6 +43,7 @@ const App = () => {
           <Route path="/search" element={<Search />} />
 
           <Route path="/AllEvents" element={<Events />} />
+          <Route path="/CalendarView" element={<CalendarView />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>

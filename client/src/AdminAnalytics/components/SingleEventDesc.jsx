@@ -4,8 +4,8 @@ import SingleEventDescChildWrapper from "../functionalcomponents/SingleEventDesc
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { Spinner } from "flowbite-react";
-
-const SingleEventDesc = ({ eventId }) => {
+import { motion } from 'framer-motion';
+const SingleEventDesc = ({eventId }) => {
   const [loader, setLoader] = useState(true);
   const [eventData, setEventData] = useState(null);
 
@@ -39,7 +39,11 @@ const SingleEventDesc = ({ eventId }) => {
 
   return (
     <>
-      <SingleEventDescWrapper>
+    
+      <motion.SingleEventDescWrapper
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}>
         <SingleEventDescChildWrapper color="#184f80" bcg="#b3d5f2">
           <h2 className="title">Title : {eventData && eventData.title}</h2>
           <span className="date">Date : {eventData && eventData.date}</span>
@@ -58,7 +62,7 @@ const SingleEventDesc = ({ eventId }) => {
             <span>View Attendees List</span>
           </NavLink>
         </SingleEventDescChildWrapper>
-      </SingleEventDescWrapper>
+      </motion.SingleEventDescWrapper>
     </>
   );
 };
