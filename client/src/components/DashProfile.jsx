@@ -43,7 +43,13 @@ const DashProfile = () => {
   const [isDisabled, setIsDisabled] = useState(true);
 
 
-  
+  useEffect(() => {
+    setIsDisabled(
+      formData.username === initialData.username &&
+      formData.email === initialData.email &&
+      formData.profilePicture === currentUser.profilePicture
+    );
+  }, [formData, initialData.username, initialData.email, currentUser.profilePicture]);
 
   useEffect(() => {
     if (image) {
@@ -67,7 +73,7 @@ const DashProfile = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, profilePicture: downloadURL })
+        setFormData((prevFormData) => ({ ...prevFormData, profilePicture: downloadURL }))
         );
       }
     );
@@ -77,7 +83,7 @@ const DashProfile = () => {
       return;
     }
     setFormData({ ...formData, [e.target.id]: e.target.value });
-    setIsDisabled(formData.username === initialData.username && formData.email === initialData.email);
+   
   };
   const handleSubmit = async (e) => {
     setIsDisabled(true);
@@ -120,10 +126,17 @@ const DashProfile = () => {
   };
   const handleSignout = async () => {
     try {
-      await fetch("api/auth/signout");
-      dispatch(signoutSuccess());
+      const res = await fetch('/api/auth/signout', {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   };
   return (

@@ -8,7 +8,7 @@ import { GiPlayerNext } from "react-icons/gi";
 import { Spinner, Button } from "flowbite-react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-
+import { motion } from 'framer-motion';
 const SingleEventAlalytics = () => {
   const { eventId } = useParams();
   const [loader, setLoader] = useState(true);
@@ -87,7 +87,7 @@ const SingleEventAlalytics = () => {
   }
   return (
     <>
-      <div
+      <motion.div 
         style={{
           marginRight: "50px",
           marginTop: "20px",
@@ -95,6 +95,9 @@ const SingleEventAlalytics = () => {
           marginBottom: "50px",
           borderRadius: "10px",
         }}
+        initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}
       >
         <h2
           style={{
@@ -110,7 +113,7 @@ const SingleEventAlalytics = () => {
         <StatsContainer defaultStats={defaultStats} eventId={eventId} />
         <SingleEventDesc eventId={eventId} />
         <ChartsContainerForSingleEvent data={data} />
-      </div>
+      </motion.div>
     </>
   );
 };

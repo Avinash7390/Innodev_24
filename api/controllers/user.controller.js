@@ -1,6 +1,8 @@
 import { errorHandler } from "../utils/error.js";
 import bcryptjs from "bcryptjs";
 import User from "../models/user.model.js";
+import { z } from "zod";
+
 export const test = (req, res) => {
   res.json({
     message: "API is working",
@@ -9,40 +11,35 @@ export const test = (req, res) => {
 
 //update user
 export const updateUser = async (req, res, next) => {
-  const emailSchema = z.string().email().refine(email => email.endsWith('@gmail.com') || email.endsWith('@mnnit.ac.in'));
-  const usernameSchema = z.string().min(1).max(20).refine(username => /^[a-zA-Z0-9]+$/.test(username));
-  const passwordSchema = z.string().min(6).max(100);
-
-  const { username, email, password } = req.body;
-
-  const { success: emailSuccess, error: emailError } = emailSchema.safeParse(email);
-  if (!emailSuccess) {
-    return next(errorHandler(400, "Invalid Email , It should end with @gmail.com or @mnnit.ac.in"));
-  }
-
-  const { success: usernameSuccess, error: usernameError } = usernameSchema.safeParse(username);
-  if (!usernameSuccess) {
-    return next(errorHandler(400, "Invalid Username , It should contain only alphanumeric characters"));
-  }
-
-  const { success: passwordSuccess, error: passwordError } = passwordSchema.safeParse(password);
-  if (!passwordSuccess) {
-    return next(errorHandler(400, "Invalid Password , It should contain atleast 6 characters"));
-  }
-
   if (req.user.id != req.params.id) {
     return next(errorHandler(401, "You can only update your account"));
   }
-
   try {
-    const hashedPassword = bcryptjs.hashSync(password, 10);
+    // Check if username contains only alphanumeric characters
+    if (!/^[a-zA-Z0-9]+$/.test(req.body.username)) {
+      return next(
+        errorHandler(400, "Username can only contain alphanumeric characters")
+      );
+    }
+
+    // Check if password is at least 6 characters long
+    if (req.body.password && req.body.password.length < 6) {
+      return next(
+        errorHandler(400, "Password must be at least 6 characters long")
+      );
+    }
+
+    if (req.body.password) {
+      req.body.password = bcryptjs.hashSync(req.body.password, 10);
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
         $set: {
-          username,
-          email,
-          password: hashedPassword,
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password,
           profilePicture: req.body.profilePicture,
         },
       },
@@ -55,9 +52,8 @@ export const updateUser = async (req, res, next) => {
     next(error);
   }
 };
-
 export const deleteUser = async (req, res, next) => {
-  if (!req.user.isAdmin &&req.user.id != req.params.id) {
+  if (!req.user.isAdmin && req.user.id != req.params.id) {
     return next(errorHandler(401, "You can delete only your account"));
   }
   try {
@@ -68,25 +64,14 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-export const signout = (req, res, next) => {
-  try {
-    res
-      .clearCookie('access_token')
-      .status(200)
-      .json('User has been signed out');
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const getUsers = async (req, res, next) => {
-  if (!req.user.isAdmin &&!req.user.isAdmin) {
-    return next(errorHandler(403, 'You are not allowed to see all users'));
+  if (!req.user.isAdmin && !req.user.isAdmin) {
+    return next(errorHandler(403, "You are not allowed to see all users"));
   }
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
-    const sortDirection = req.query.sort === 'asc' ? 1 : -1;
+    const sortDirection = req.query.sort === "asc" ? 1 : -1;
 
     const users = await User.find({ isAdmin: false })
       .sort({ createdAt: sortDirection })

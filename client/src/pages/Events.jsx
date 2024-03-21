@@ -12,16 +12,14 @@ const Events = () => {
   const [userEvents,setUserEvents]=useState([]);
 
   
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  
 
 
   useEffect(() => {
     try {
       setLoading(true);
       const fetchRecentEvents = async () => {
-        const res = await fetch(`/api/event/getEvents?limit=6&sort=-createdAt`);
+        const res = await fetch(`/api/event/getEvents?limit=6&sortField=createdAt`);
         const data = await res.json();
         if (res.ok) {
           console.log(data);
@@ -93,7 +91,7 @@ const Events = () => {
   {userEvents.length>0?(
 <>
 <div className='flex flex-col justify-center items-center mb-5'>
-    <h1 className='text-xl mt-5'>New Events</h1>
+    <h1 className='text-3xl mt-5 font-bold'>New Events</h1>
     <motion.div className='flex flex-wrap gap-5 mt-5 justify-center transition-all duration-1000'
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -104,15 +102,25 @@ const Events = () => {
   </div>
 {
     showMore&&(
-   <button onClick={handleShowMore} className='w-full text-teal-500 self-center text-sm py-7'>Show more</button>
+   <button onClick={handleShowMore} className='w-full text-teal-500 self-center text-lg py-7'>Show more</button>
     )
   }
   <div className='mx-auto flex flex-col items-center justify-center'>
-  <p className='text-slate-300 font-semibold'>Confused ? We have advanced search filters to help you attend Events aligned with your Schedules .</p>
+  <p className='text-zinc-800 dark:text-slate-300 text-xl font-semibold '>Confused ? We have advanced search filters to help you attend Events aligned with your Schedules .</p>
   <Link className='' to="/search">
-    <Button className='mt-8 mb-16' gradientDuoTone="pinkToOrange" outline>
-      Try Now
-    </Button>
+  <Button 
+  className='mt-8 mb-16 hover:scale-125' 
+  gradientDuoTone="pinkToOrange" 
+  outline
+  style={{
+    transition: 'ease-in-out 0.3s',
+    boxShadow: '0 0 5px #ff7f50, 0 0 5px #ff7f50, 0 0 5px #ff7f50, 0 0 10px #ff7f50'
+  }}
+  onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 0 10px #ff7f50, 0 0 10px #ff7f50, 0 0 10px #ff7f50, 0 0 20px #ff7f50'}
+  onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 0 5px #ff7f50, 0 0 5px #ff7f50, 0 0 5px #ff7f50, 0 0 5px #ff7f50'}
+>
+  Try Now !
+</Button>
   </Link>
 </div>
   

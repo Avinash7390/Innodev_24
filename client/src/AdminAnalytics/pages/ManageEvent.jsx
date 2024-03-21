@@ -5,11 +5,13 @@ import { Button, Card, Label, TextInput } from "flowbite-react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { motion } from 'framer-motion';
 const ManageEvent = () => {
   const { eventId } = useParams();
   const [regNo, setRegNO] = useState("");
   const [response, setResponse] = useState(null);
   const navigate = useNavigate();
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +41,12 @@ const ManageEvent = () => {
   };
   return (
     <>
-      <div className="flex flex-col justify-center items-center">
+      <motion.div className="flex flex-col justify-center items-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+      
+      >
         <div className="w-full sm:w-1/2 mb-4 sm:mb-0 p-7">
           <Card className="max-w-lg">
             <form className="flex flex-col gap-4">
@@ -89,7 +96,7 @@ const ManageEvent = () => {
             </Button>
           </Card>
         </div>
-      </div>
+      </motion.div>
     </>
     // <ManageEventCompo>
     //   <div className="container">

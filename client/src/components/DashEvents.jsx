@@ -26,7 +26,7 @@ useEffect(()=>{
 const fetchEvents=async()=>{
   try{
     setLoading(true);
-    const res=await fetch(`/api/event/getEvents?userId=${currentUser._id}`)
+    const res=await fetch(`/api/event/getEvents?userId=${currentUser._id}&sortField=createdAt`)
     const data=await res.json()
     console.log(data);
    

@@ -2,30 +2,57 @@ import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
-import { z } from 'zod';
+import { z } from "zod";
 
 export const signup = async (req, res, next) => {
-  const emailSchema = z.string().email().refine(email => email.endsWith('@gmail.com') || email.endsWith('@mnnit.ac.in'));
+  const emailSchema = z
+    .string()
+    .email()
+    .refine(
+      (email) => email.endsWith("@gmail.com") || email.endsWith("@mnnit.ac.in")
+    );
 
-  const usernameSchema = z.string().min(1).max(20).refine(username => /^[a-zA-Z0-9]+$/.test(username));
+  const usernameSchema = z
+    .string()
+    .min(1)
+    .max(20)
+    .refine((username) => /^[a-zA-Z0-9]+$/.test(username));
 
   const passwordSchema = z.string().min(6).max(100);
 
   const { username, email, password } = req.body;
 
-  const { success: emailSuccess, error: emailError } = emailSchema.safeParse(email);
+  const { success: emailSuccess, error: emailError } =
+    emailSchema.safeParse(email);
   if (!emailSuccess) {
-    return next(errorHandler(400, "Invalid Email , It should end with @gmail.com or @mnnit.ac.in"));
+    return next(
+      errorHandler(
+        400,
+        "Invalid Email , It should end with @gmail.com or @mnnit.ac.in"
+      )
+    );
   }
 
-  const { success: usernameSuccess, error: usernameError } = usernameSchema.safeParse(username);
+  const { success: usernameSuccess, error: usernameError } =
+    usernameSchema.safeParse(username);
   if (!usernameSuccess) {
-    return next(errorHandler(400, "Invalid Username , It should contain only alphanumeric characters"));
+    return next(
+      errorHandler(
+        400,
+        "Invalid Username , It should contain only alphanumeric characters"
+      )
+    );
   }
 
-  const { success: passwordSuccess, error: passwordError } = passwordSchema.safeParse(password);
+  const { success: passwordSuccess, error: passwordError } =
+    passwordSchema.safeParse(password);
   if (!passwordSuccess) {
-    return next(errorHandler(400, "Invalid Password , It should contain atleast 6 characters"));
+    return next(
+      errorHandler(
+        400,
+        "Invalid Password , It should contain atleast 6 characters"
+      )
+    );
   }
 
   try {
@@ -47,8 +74,10 @@ export const signin = async (req, res, next) => {
   try {
     const validUser = await User.findOne({ email });
     if (!validUser) return next(errorHandler(404, "User not found"));
-    const validPassword = validUser ? bcryptjs.compareSync(password, validUser.password) : false;
-    if (!validUser || !validPassword) {
+    const validPassword = validUser
+      ? bcryptjs.compareSync(password, validUser.password)
+      : false;
+    if (!validPassword) {
       return next(errorHandler(401, "Invalid email or password"));
     }
 
@@ -62,7 +91,7 @@ export const signin = async (req, res, next) => {
     res
       .cookie("access_token", token, { httpOnly: true, expires: expiryDate })
       .status(200)
-      .json(rest);  //storing everything except password in the response , we don't wanna give even the hashed password to the client side
+      .json(rest); //storing everything except password in the response , we don't wanna give even the hashed password to the client side
   } catch (error) {
     next(error);
   }
@@ -115,4 +144,13 @@ export const google = async (req, res, next) => {
   }
 };
 
-
+export const signout = (req, res, next) => {
+  try {
+    res
+      .clearCookie("access_token")
+      .status(200)
+      .json("User has been signed out");
+  } catch (error) {
+    next(error);
+  }
+};
