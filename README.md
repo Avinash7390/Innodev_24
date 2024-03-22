@@ -1,4 +1,14 @@
 # Dev_love_pers : Event Management Application
+<hr/>
+
+<h1>
+ $2^{nd}$ Position in Innodev $2k24$
+</h1>
+
+**_[Demo](https://drive.google.com/drive/folders/1hK2ucdCDVmHrIc3ca-ee1FByla6FEgYS)_**
+<br/>
+**_[PPT](https://docs.google.com/presentation/d/1BowrUpeD1gkz78oo5Fnlp93sE3Prg6xK/edit#slide=id.p1)_**
+
 
 A Web Application which we completed during the Innodev'24
 
