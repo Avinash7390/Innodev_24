@@ -56,7 +56,7 @@ export const getEvents = async (req, res, next) => {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
     const sortDirection = req.query.sort === "asc" ? 1 : -1;
-    const sortField = req.query.sortField;
+    const sortField = req.query.sortField || "createdAt";
     const month = req.query.month;
 
     const startDate = new Date(
@@ -72,7 +72,7 @@ export const getEvents = async (req, res, next) => {
         },
       }),
       ...(req.query.date && {
-        date: { $regex: req.query.date, $options: "i" },
+        date: new Date(req.query.date),
       }),
       ...(req.query.time && {
         time: { $regex: req.query.time, $options: "i" },
@@ -114,7 +114,6 @@ export const getEvents = async (req, res, next) => {
     next(error);
   }
 };
-
 export const deleteEvent = async (req, res, next) => {
   if (!req.user.isAdmin || req.user.id !== req.params.userId) {
     return next(errorHandler(403, "You are not allowed to delete this Event"));
