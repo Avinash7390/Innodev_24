@@ -51,7 +51,7 @@ const Events = () => {
   const handleShowMore=async()=>{
     const startIndex=userEvents.length;
     try{
-      const res=await fetch(`api/event/getEvents?startIndex=${startIndex}`);
+      const res=await fetch(`api/event/getEvents?startIndex=${startIndex}&sortField=createdAt`);
       const data=await res.json();
       if(res.ok){
         setUserEvents((prev)=>[...prev,...data.event]);
