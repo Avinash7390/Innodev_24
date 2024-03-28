@@ -16,9 +16,20 @@ export const updateUser = async (req, res, next) => {
   }
   try {
     // Check if username contains only alphanumeric characters
-    if (!/^[a-zA-Z0-9]+$/.test(req.body.username)) {
+    if (req.body.username && !/^[a-zA-Z0-9]+$/.test(req.body.username)) {
       return next(
         errorHandler(400, "Username can only contain alphanumeric characters")
+      );
+    }
+    console.log(req.body.email);
+
+    // Check if email ends with @gmail.com or @mnnit.ac.in
+    if (
+      req.body.email &&
+      !/^(.+)@(gmail\.com|mnnit\.ac\.in)$/.test(req.body.email)
+    ) {
+      return next(
+        errorHandler(400, "Email should end with @gmail.com or @mnnit.ac.in")
       );
     }
 
@@ -31,6 +42,24 @@ export const updateUser = async (req, res, next) => {
 
     if (req.body.password) {
       req.body.password = bcryptjs.hashSync(req.body.password, 10);
+    }
+    let existingUser;
+    if (req.body.username || req.body.email) {
+      existingUser = await User.findOne({
+        $and: [
+          { _id: { $ne: req.params.id } },
+          {
+            $or: [
+              ...(req.body.username ? [{ username: req.body.username }] : []),
+              ...(req.body.email ? [{ email: req.body.email }] : []),
+            ],
+          },
+        ],
+      });
+    }
+
+    if (existingUser) {
+      return next(errorHandler(400, "Username or email already exists"));
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -52,7 +81,6 @@ export const updateUser = async (req, res, next) => {
     next(error);
   }
 };
-
 
 export const deleteUser = async (req, res, next) => {
   if (!req.user.isAdmin && req.user.id != req.params.id) {
