@@ -24,6 +24,13 @@ import { Button ,Modal} from "flowbite-react";
 import { Link } from "react-router-dom";
 import { motion } from 'framer-motion';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import { Bounce } from 'react-toastify';
+
+
+
 
 
 const DashProfile = () => {
@@ -42,6 +49,47 @@ const DashProfile = () => {
   });
   const [isDisabled, setIsDisabled] = useState(true);
 
+  useEffect(() => {
+    let isMounted = true; 
+  
+    const notify = () => {
+      if (!isMounted) return; 
+  
+      if (updateSuccess) {
+        toast.success('Details updated successfully', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
+        return;
+      }
+      if (error) {
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
+      }
+    };
+  
+    notify();
+  
+    return () => {
+      isMounted = false; 
+    };
+  }, [updateSuccess, error]);
 
   useEffect(() => {
     setIsDisabled(
@@ -70,10 +118,13 @@ const DashProfile = () => {
       },
       (error) => {
         setImageError(true);
+        setIsDisabled(true);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-        setFormData((prevFormData) => ({ ...prevFormData, profilePicture: downloadURL }))
+        { setFormData((prevFormData) => ({ ...prevFormData, profilePicture: downloadURL }))
+          setImageError(false);
+      }
         );
       }
     );
@@ -83,10 +134,12 @@ const DashProfile = () => {
       return;
     }
     setFormData({ ...formData, [e.target.id]: e.target.value });
+    console.log(formData);
    
   };
   const handleSubmit = async (e) => {
     setIsDisabled(true);
+    setUpdateSuccess(false);
     e.preventDefault();
     try {
       dispatch(updateUserStart());
@@ -96,17 +149,23 @@ const DashProfile = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      });
+      }); 
       const data = await res.json();
+      console.log(data);
       if (data.success === false) {
-        dispatch( updateUserFailure(data)  );
+
+        dispatch(updateUserFailure(new Error(data.message || "Update failed")));
+           
         return;
       }
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
     } catch (error) {
       dispatch(updateUserFailure(error));
+      
+      console.log(error);
     }
+   
   };
   const handleDeleteAccount = async (e) => {
     try {
@@ -135,6 +194,7 @@ const DashProfile = () => {
       } else {
         dispatch(signoutSuccess());
       }
+      
     } catch (error) {
       console.log(error.message);
     }
@@ -206,6 +266,7 @@ const DashProfile = () => {
           gradientDuoTone="purpleToBlue"
           outline
           disabled={isDisabled}
+        
         >
           {loading ? "loading..." : "update"}
         </Button>
@@ -216,7 +277,7 @@ const DashProfile = () => {
               gradientDuoTone="purpleToPink"
               className="w-full"
             >
-              Create an Event
+              Create Event
             </Button>
           </Link>
         )}
@@ -229,10 +290,7 @@ const DashProfile = () => {
           Sign out
         </span>
       </div>
-      <p className="text-red-700 mt-5">{error && "Something went wrong !"}</p>
-      <p className="text-green-700 mt-5 p-4  rounded-4xl bg-opacity-20">
-        {updateSuccess && "User Updated Successfully"}
-      </p>
+     
       <Modal
         show={showModal}
         onClose={() => setShowModal(false)}
@@ -257,6 +315,21 @@ const DashProfile = () => {
           </div>
         </Modal.Body>
       </Modal>
+      <ToastContainer
+position="top-right"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="dark"
+transition={Bounce}
+/>
+
+<ToastContainer />
     </motion.div>
     
   );
