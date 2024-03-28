@@ -21,4 +21,8 @@
     "uuid": "^9.0.1",
     "zod": "^3.22.4"
   }
+  ,
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.6.1"
+  }
 }
