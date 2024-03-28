@@ -4,14 +4,17 @@ import dotenv from "dotenv";
 import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
-import path from "path";
+
 import eventRoutes from "./routes/event.route.js";
 
 import registerAndMakePayment from "./routes/registerAndPaymentRoute.js";
-import analyticsRoutes from "./routes/analyticsRoutes.js"
-import attendanceRoutes from "./routes/attendanceRoute.js"
+import analyticsRoutes from "./routes/analyticsRoutes.js";
+import attendanceRoutes from "./routes/attendanceRoute.js";
+import path from "path";
 
 dotenv.config();
+
+const __dirname = path.resolve();
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
@@ -31,8 +34,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/event", eventRoutes);
 
 app.use("/api/payment", registerAndMakePayment);
-app.use("/api/analytics", analyticsRoutes)
-app.use("/api/attendance", attendanceRoutes)
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/attendance", attendanceRoutes);
 app.use((err, req, res, next) => {
   //middleware for handling errors
   const statusCode = err.statusCode || 500;
@@ -43,6 +46,13 @@ app.use((err, req, res, next) => {
     statusCode,
   });
 });
+
+app.use(express.static(path.join(__dirname, "/client/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+});
+
 /*const httpServer = createServer();
 const io = new Server(httpServer,{
   cors: {
