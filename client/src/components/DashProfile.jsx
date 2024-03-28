@@ -118,10 +118,13 @@ const DashProfile = () => {
       },
       (error) => {
         setImageError(true);
+        setIsDisabled(true);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-        setFormData((prevFormData) => ({ ...prevFormData, profilePicture: downloadURL }))
+        { setFormData((prevFormData) => ({ ...prevFormData, profilePicture: downloadURL }))
+          setImageError(false);
+      }
         );
       }
     );
@@ -191,6 +194,7 @@ const DashProfile = () => {
       } else {
         dispatch(signoutSuccess());
       }
+      
     } catch (error) {
       console.log(error.message);
     }
