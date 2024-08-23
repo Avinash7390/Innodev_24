@@ -51,7 +51,7 @@ A Web Application which we completed during the Innodev'24
 
  You should have NodeJs and mongodb already installed .
 
- - git clone https://github.com/suhas3145/Innodev_24.git
+ - git clone https://github.com/mehulgarg123/Innodev_24.git
 
  - cd Innodev_24 ----> npm run dev on one terminal .
 
