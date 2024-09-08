@@ -7,7 +7,7 @@
 
 **_[The Project is live here: ](https://innodev-24-3.onrender.com)_**
 <br/>
-**_[PPT](https://docs.google.com/presentation/d/1BowrUpeD1gkz78oo5Fnlp93sE3Prg6xK/edit#slide=id.p1)_**
+
 
 
 A Web Application which we completed during the Innodev'24
