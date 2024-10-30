@@ -1,4 +1,4 @@
-# Dev_love_pers : Event Management Application
+# Dev_love_pers : KAR AVISHKAR an Event Management Application 
 <hr/>
 
 <h1>
